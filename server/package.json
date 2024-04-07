@@ -3,17 +3,26 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "npm": "10.5.0",
+    "node": "20.11.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "node index.js",
-    "dev": "nodemon index.js"
+    "serve": "nodemon index.js",
+    "dev": "nodemon index.js",
+    "migrate": "node database/migration.js"
   },
-  "author": "",
+  "author": "Nayem",
   "license": "ISC",
   "dependencies": {
     "express": "^4.19.1",
     "express-validator": "^7.0.1",
+    "geoip-lite": "^1.4.10",
+    "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.9.2",
+    "node-device-detector": "^2.1.0",
+    "node-file-logger": "^0.9.5",
     "sequelize": "^6.37.1"
   },
   "devDependencies": {

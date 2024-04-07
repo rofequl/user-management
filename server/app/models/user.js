@@ -1,17 +1,79 @@
-const {DataTypes} = require('sequelize');
-const sequelize = require('../../config/database');
+const {DataTypes, Model} = require('sequelize');
 
-const User = sequelize.define('User', {
-    firstName: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    lastName: {
-        type: DataTypes.STRING
+module.exports = (sequelize) => {
+    class User extends Model {
     }
-}, {
-    // Other model options go here
-});
 
-// `sequelize.define` also returns the model
-console.log(User === sequelize.models.User); // true
+    User.init({
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                notNull: true
+            }
+        },
+        username: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true,
+            validate: {
+                notNull: true
+            }
+        },
+        email: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            isEmail: true,
+            unique: true,
+            validate: {
+                notNull: true
+            }
+        },
+        mobile: {
+            type: DataTypes.STRING,
+        },
+        dob: {
+            type: DataTypes.DATE,
+            validate: {
+                isDate: true
+            }
+        },
+        gender: {
+            type: DataTypes.STRING,
+            validate: {
+                isIn: [['Male', 'Female']],
+            }
+        },
+        password: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        salt: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        status: {
+            type: DataTypes.TINYINT,
+            allowNull: false,
+            defaultValue: 1         // 1 = Active
+        },
+        roleId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'roles',
+                key: 'id',
+            }
+        },
+        profilePicture: {
+            type: DataTypes.STRING
+        },
+    }, {
+        sequelize,
+        defaultScope: {
+            attributes: {
+                exclude: ['password', 'salt']
+            }
+        },
+    })
+}
