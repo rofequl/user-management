@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const sequelize = require('./app/models');
-const port = 3000
+const port = 3030
 
 // We provide a root route just as an example
 app.get('/', (req, res) => {

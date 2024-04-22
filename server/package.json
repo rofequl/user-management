@@ -16,6 +16,7 @@
   "author": "Nayem",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.19.1",
     "express-validator": "^7.0.1",
     "geoip-lite": "^1.4.10",
