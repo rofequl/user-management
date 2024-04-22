@@ -14,6 +14,7 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
 });
 
 const modelDefiners = [
+    require('./permission'),
     require('./role'),
     require('./user'),
     require('./login_info'),
@@ -23,5 +24,10 @@ const modelDefiners = [
 for (const modelDefiner of modelDefiners) {
     modelDefiner(sequelize);
 }
+
+// Role and Permission Many-to-Many relation
+const Role_permission = sequelize.define('Role_permission', {}, {timestamps: false});
+sequelize.models.Role.belongsToMany(sequelize.models.Permission, {through: Role_permission});
+sequelize.models.Permission.belongsToMany(sequelize.models.Role, {through: Role_permission});
 
 module.exports = sequelize
