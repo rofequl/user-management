@@ -1,5 +1,5 @@
-module.exports = (sequelize) => {
-    sequelize.models.Permission.bulkCreate([
+module.exports = async (sequelize) => {
+    await sequelize.models.Permission.bulkCreate([
         {name: 'View User List'},
         {name: 'Add New User'},
         {name: 'Edit User'},

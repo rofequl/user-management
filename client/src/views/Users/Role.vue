@@ -8,7 +8,7 @@ const testService = params => {
   return axios.get('https://61273138c2e8920017bc0b3c.mockapi.io/api/users', {params});
 }
 
-const {data, run, current, totalPage, loading, pageSize} = usePagination(testService, {
+const {data, run, current, total, loading, pageSize} = usePagination(testService, {
   defaultParams: [
     {
       limit: 10,
@@ -24,7 +24,7 @@ const {data, run, current, totalPage, loading, pageSize} = usePagination(testSer
 const list = computed(() => data.value?.data.data || []);
 
 const pagination = computed(() => ({
-  total: 200,
+  total: total.value,
   current: current.value,
   pageSize: pageSize.value,
 }));

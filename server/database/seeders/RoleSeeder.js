@@ -1,17 +1,11 @@
-module.exports = (sequelize) => {
-    sequelize.models.Role.bulkCreate([
+module.exports = async (sequelize) => {
+
+    // Retrieve all Permission
+    const allPermission = await sequelize.models.Permission.findAll();
+
+    await sequelize.models.Role.create(
         {
             name: 'Super Admin',
-            permissions: [
-                {
-                    name: 'View User Lists',
-                    Role_permission: {
-                        selfGranted: true,
-                    },
-                },
-            ],
-        }
-    ],{
-        include: [ sequelize.models.Permission ]
-    }).then(r => console.log('Role seeder successfully!'));
+        }).then(role => role.addPermission(allPermission));
+
 }

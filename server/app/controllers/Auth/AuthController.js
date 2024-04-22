@@ -1,10 +1,10 @@
 const {body, validationResult} = require("express-validator"),
-    {models} = require('../../app/models'),
-    {genPassword, validPassword} = require("../helper/auth/passwordUtils"),
-    {genUsername} = require("../helper/helper"),
-    log = require('../../config/logging'),
-    {issueJWT} = require("../helper/auth/jwtUtils"),
-    {storeUserLoginInfo} = require("../helper/auth/loginInfo");
+    {models} = require('../../models'),
+    {genPassword, validPassword} = require("../../helper/auth/passwordUtils"),
+    {genUsername} = require("../../helper/helper"),
+    log = require('../../../config/logging'),
+    {issueJWT} = require("../../helper/auth/jwtUtils"),
+    {storeUserLoginInfo} = require("../../helper/auth/loginInfo");
 
 // Get user information
 module.exports.profile = function (req, res) {

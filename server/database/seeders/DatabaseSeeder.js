@@ -1,5 +1,5 @@
-module.exports = (sequelize) => {
-    require("./PermissionSeeder")(sequelize);
-    require("./RoleSeeder")(sequelize);
-    require("./UserSeeder")(sequelize);
+module.exports = async (sequelize) => {
+    await require("./PermissionSeeder")(sequelize);
+    await require("./RoleSeeder")(sequelize);
+    await require("./UserSeeder")(sequelize);
 }
