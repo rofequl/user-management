@@ -17,9 +17,19 @@ const routes = [
         component: () => import('@/views/Dashboard.vue')
       },
       {
+        path: '/user/list',
+        name: 'All User',
+        component: () => import('@/views/Users/UserList.vue')
+      },
+      {
         path: '/user/role',
         name: 'User Permission',
-        component: () => import('@/views/Users/Role.vue')
+        component: () => import('@/views/Users/Role/Role.vue')
+      },
+      {
+        path: '/user/role/create',
+        name: 'New Role',
+        component: () => import('@/views/Users/Role/AddRole.vue')
       }
     ]
   },

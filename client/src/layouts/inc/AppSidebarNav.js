@@ -1,7 +1,7 @@
-import { defineComponent, h, onMounted, ref, resolveComponent } from 'vue'
-import { RouterLink, useRoute } from 'vue-router'
+import {defineComponent, h, onMounted, ref, resolveComponent} from 'vue'
+import {RouterLink, useRoute} from 'vue-router'
 
-import { CBadge, CSidebarNav, CNavItem, CNavGroup, CNavTitle } from '@coreui/vue'
+import {CBadge, CSidebarNav, CNavItem, CNavGroup, CNavTitle} from '@coreui/vue'
 import nav from '@/layouts/inc/_nav.js'
 
 import simpleBar from 'simplebar-vue'
@@ -91,31 +91,37 @@ const AppSidebarNav = defineComponent({
                 resolveComponent(item.component),
                 {
                   active: props.isActive,
-                  as: 'div',
-                  href: props.href,
-                  onClick: () => props.navigate(),
                 },
                 {
-                  default: () => [
-                    item.icon
-                      ? h(resolveComponent('CIcon'), {
-                        customClassName: 'nav-icon',
-                        name: item.icon,
-                      })
-                      : h('span', { class: 'nav-icon' }, h('span', { class: 'nav-icon-bullet' })),
-                    item.name,
-                    item.badge &&
-                    h(
-                      CBadge,
-                      {
-                        class: 'ms-auto',
-                        color: item.badge.color,
-                      },
-                      {
-                        default: () => item.badge.text,
-                      },
-                    ),
-                  ],
+                  default: () => h(
+                    RouterLink,
+                    {
+                      to: props.href,
+                      class: 'nav-link',
+                      onClick: () => props.navigate(),
+                    },
+                    {
+                      default: () => [
+                        item.icon ?
+                          h(resolveComponent('CIcon'), {
+                            customClassName: 'nav-icon',
+                            name: item.icon,
+                          }) : h('span', {class: 'nav-icon'}, h('span', {class: 'nav-icon-bullet'})), ,
+                        item.name,
+                        item.badge &&
+                        h(
+                          CBadge,
+                          {
+                            class: 'ms-auto',
+                            color: item.badge.color,
+                          },
+                          {
+                            default: () => item.badge.text,
+                          },
+                        ),
+                      ],
+                    },
+                  )
                 },
               ),
           },
@@ -143,4 +149,4 @@ const AppSidebarNav = defineComponent({
       )
   },
 })
-export { AppSidebarNav }
+export {AppSidebarNav}

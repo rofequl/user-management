@@ -1,19 +1,12 @@
 <script setup>
-import {CRow, CCol, CTable, CTableHead, CTableRow, CTableHeaderCell, CTableBody, CTableDataCell} from "@coreui/vue";
-import axios from 'axios';
-import {computed, defineComponent} from 'vue';
+import {CRow, CCol, CButton} from "@coreui/vue";
+import {computed} from 'vue';
 import {usePagination} from 'vue-request';
+import apiService from "../../../core/services/api.service";
 
-const testService = params => {
-  return axios.get('https://61273138c2e8920017bc0b3c.mockapi.io/api/users', {params});
-}
+const getRoleList = params => apiService.get('role', {params})
 
-const {data, run, current, total, loading, pageSize} = usePagination(testService, {
-  defaultParams: [
-    {
-      limit: 10,
-    },
-  ],
+const {data, run, current, total, loading, pageSize} = usePagination(getRoleList, {
   pagination: {
     currentKey: 'page',
     pageSizeKey: 'limit',
@@ -21,8 +14,7 @@ const {data, run, current, total, loading, pageSize} = usePagination(testService
   },
 });
 
-const list = computed(() => data.value?.data.data || []);
-
+const dataSource = computed(() => data.value?.data.data || []);
 const pagination = computed(() => ({
   total: total.value,
   current: current.value,
@@ -37,13 +29,10 @@ const columns = [
   }
 ]
 
-const handleTableChange = (pag, filters, sorter) => {
+const handleTableChange = (pag) => {
   run({
     limit: pag.pageSize,
     page: pag?.current,
-    sortField: sorter.field,
-    sortOrder: sorter.order,
-    ...filters,
   });
 };
 </script>
@@ -55,11 +44,16 @@ const handleTableChange = (pag, filters, sorter) => {
         <span class="text-uppercase page-subtitle fs-6">Manage User</span>
         <h4 class="page-title">User Permission</h4>
       </CCol>
+      <CCol sm="6" xs="12" class="d-flex justify-content-end">
+        <a-button type="primary">
+          <router-link to="/user/role/create" style="text-decoration: none">Add New Role</router-link>
+        </a-button>
+      </CCol>
     </CRow>
     <!-- End Page Header -->
     <!-- Datatable -->
-    <a-table :dataSource="list" :columns="columns" :loading="loading" :pagination="pagination"
-             @change="handleTableChange"/>
+    <a-table :dataSource="dataSource" :columns="columns" :loading="loading" :pagination="pagination"
+             @change="handleTableChange" bordered/>
     <!-- End Datatable -->
   </div>
 </template>

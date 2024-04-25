@@ -1,6 +1,7 @@
 const {Router} = require("express")
 const router = Router()
 const AuthController = require('../app/controllers/Auth/AuthController')
+const UserController = require('../app/controllers/Auth/UserController')
 const RoleController = require('../app/controllers/Auth/RoleController')
 const {detectServer} = require("../app/middleware/DetectServer");
 const {authMiddleware, JWTRefresh} = require("../app/helper/auth/jwtUtils");
@@ -12,7 +13,12 @@ router.post("/user/register", AuthController.register)
 router.post("/user/logout", authMiddleware, AuthController.logout);
 router.post("/user/token/refresh", JWTRefresh);
 
+// User Management API
+router.get("/user", authMiddleware, UserController.getUser);
+
 // User Role Api
-router.get("/role/list", authMiddleware, RoleController.getRole);
+router.get("/role", authMiddleware, RoleController.getRole);
+router.post("/role", authMiddleware, RoleController.addRole);
+router.get("/permission/list", authMiddleware, RoleController.getPermission);
 
 module.exports = router;

@@ -33,3 +33,9 @@ const updateSidebarVisible = (event) => {
     <AppSidebarNav/>
   </CSidebar>
 </template>
+<style>
+.sidebar-nav .nav-link.router-link-exact-active {
+  color: var(--cui-sidebar-nav-link-active-color);
+  background: var(--cui-sidebar-nav-link-active-bg);
+}
+</style>
