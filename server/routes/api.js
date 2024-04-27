@@ -19,6 +19,8 @@ router.get("/user", authMiddleware, UserController.getUser);
 // User Role Api
 router.get("/role", authMiddleware, RoleController.getRole);
 router.post("/role", authMiddleware, RoleController.addRole);
+router.get("/role/:id", authMiddleware, RoleController.getRoleDetails);
+router.delete("/role/:id", authMiddleware, RoleController.deleteRole);
 router.get("/permission/list", authMiddleware, RoleController.getPermission);
 
 module.exports = router;

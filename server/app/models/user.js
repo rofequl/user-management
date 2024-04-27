@@ -57,14 +57,6 @@ module.exports = (sequelize) => {
             allowNull: false,
             defaultValue: 1         // 1 = Active
         },
-        roleId: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            references: {
-                model: 'roles',
-                key: 'id',
-            }
-        },
         profilePicture: {
             type: DataTypes.STRING
         },

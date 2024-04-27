@@ -30,6 +30,11 @@ const routes = [
         path: '/user/role/create',
         name: 'New Role',
         component: () => import('@/views/Users/Role/AddRole.vue')
+      },
+      {
+        path: '/user/:id/edit',
+        name: 'Edit Role',
+        component: () => import('@/views/Users/Role/EditRole.vue')
       }
     ]
   },

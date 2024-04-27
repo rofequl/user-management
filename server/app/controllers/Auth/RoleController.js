@@ -3,24 +3,12 @@ const log = require("../../../config/logging"),
     {body, validationResult} = require("express-validator");
 
 // Role list send by API
-exports.getRole = async (req, res, next) => {
+exports.getRole = async (req, res) => {
     try {
-        // Role list pagination set
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
-        const offset = (page - 1) * limit;
-        const result = await models.Role.findAndCountAll({
-            offset: offset,
-            limit: limit
-        });
-        const totalPages = Math.ceil(result.count / limit);
-
+        const result = await models.Role.findAll({order: [['id', 'DESC']]});
         res.status(200).json({
             success: true,
-            data: result.rows,
-            currentPage: page,
-            totalPages: totalPages,
-            totalItems: result.count
+            data: result,
         });
     } catch (err) {
         log.Error(err.message, 'RoleController', 'getRole', err.errors, function () {
@@ -29,8 +17,32 @@ exports.getRole = async (req, res, next) => {
     }
 }
 
+// Role details send by API
+exports.getRoleDetails = async (req, res) => {
+    const {id} = req.params;
+    try {
+        const role = await models.Role.findByPk(id, {include: models.Permission});
+        if (!role) return res.status(404).json({success: false, message: 'Role not found'});
+        // Extract only the permission IDs from the associated permissions
+        const permissionIds = role.Permissions.map(permission => permission.id);
+
+        res.status(200).json({
+            success: true,
+            data: {
+                id: role.id,
+                name: role.name,
+                permissionIds: permissionIds
+            },
+        });
+    } catch (err) {
+        log.Error(err.message, 'RoleController', 'getRoleDetails', err.errors, function () {
+            res.status(500).json({success: false, message: "Internal Server Error", error: err.message});
+        });
+    }
+}
+
 // Permission list send by API
-exports.getPermission = async (req, res, next) => {
+exports.getPermission = async (req, res) => {
     try {
         const result = await models.Permission.findAll({
             attributes: ['section', 'id', 'name'],
@@ -88,3 +100,27 @@ module.exports.addRole = [
         }
     }
 ]
+
+// Role Delete API
+exports.deleteRole = async (req, res) => {
+    const {id} = req.params;
+    try {
+        const role = await models.Role.findByPk(id, {include: models.User});
+        if (!role) return res.status(404).json({success: false, message: 'Role not found'});
+        if (role.Users.length > 0) return res.status(400).json({
+            success: false,
+            message: 'Role has been assign by users. Cannot delete.'
+        });
+
+        await role.destroy();
+
+        res.status(200).json({
+            success: true,
+            message: 'Role deleted successfully'
+        });
+    } catch (err) {
+        log.Error(err.message, 'RoleController', 'deleteRole', err.errors, function () {
+            res.status(500).json({success: false, message: "Error sending record", error: err.message});
+        });
+    }
+}

@@ -25,15 +25,22 @@ apiService.interceptors.response.use(response => response, async (error) => {
   }
 
   if (status === 403 && error.response.data.error === 'Token expired') {
-    return await apiService.post('user/token/refresh')
-      .then(({data}) => {
-        JwtService.destroyToken();
-        store.commit('SET_AUTH', data)
-        axios.defaults.headers.common['Authorization'] = `Bearer ${JwtService.getToken()}`;
-      })
-      .catch((error) => {
-        Promise.reject(error);
-      });
+    try {
+      const {data} = await apiService.post('user/token/refresh');
+      JwtService.destroyToken();
+      store.commit('SET_AUTH', data);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${JwtService.getToken()}`;
+
+      // Retry the original request with the new token
+      const originalRequest = error.config;
+      originalRequest.headers['Authorization'] = `Bearer ${JwtService.getToken()}`;
+      return apiService(originalRequest);
+    } catch (refreshError) {
+      // If refreshing token fails, redirect to login or handle the error as needed
+      await store.commit('PURGE_AUTH');
+      await router.push({name: 'Login'});
+      return Promise.reject(refreshError);
+    }
   }
   return Promise.reject(error);
 })

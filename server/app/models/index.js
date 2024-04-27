@@ -25,9 +25,7 @@ for (const modelDefiner of modelDefiners) {
     modelDefiner(sequelize);
 }
 
-// Role and Permission Many-to-Many relation
-const Role_permission = sequelize.define('Role_Permission', {}, {timestamps: false});
-sequelize.models.Role.belongsToMany(sequelize.models.Permission, {through: Role_permission});
-sequelize.models.Permission.belongsToMany(sequelize.models.Role, {through: Role_permission});
+// Model Relationship all defined here
+require('./relation')(sequelize)
 
 module.exports = sequelize

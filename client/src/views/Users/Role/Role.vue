@@ -1,50 +1,64 @@
 <script setup>
-import {CRow, CCol, CButton} from "@coreui/vue";
-import {computed} from 'vue';
-import {usePagination} from 'vue-request';
-import apiService from "../../../core/services/api.service";
+import {CRow, CCol} from "@coreui/vue";
+import {computed, h, onMounted} from 'vue';
+import store from "@/store";
+import {EditOutlined, DeleteOutlined} from "@ant-design/icons-vue";
+import {notification} from "ant-design-vue";
+import router from "@/router";
 
-const getRoleList = params => apiService.get('role', {params})
-
-const {data, run, current, total, loading, pageSize} = usePagination(getRoleList, {
-  pagination: {
-    currentKey: 'page',
-    pageSizeKey: 'limit',
-    totalKey: 'data.total',
-  },
+const roleList = computed(() => store.getters.roleList)
+onMounted(() => {
+  if (!roleList.value.length > 0) store.dispatch('ROLE_LIST')
 });
-
-const dataSource = computed(() => data.value?.data.data || []);
-const pagination = computed(() => ({
-  total: total.value,
-  current: current.value,
-  pageSize: pageSize.value,
-}));
 
 const columns = [
   {
     title: 'Name',
     dataIndex: 'name',
     key: 'name',
-  }
+  },
+  {
+    title: 'Action',
+    dataIndex: 'action',
+    width: '10%',
+  },
 ]
 
-const handleTableChange = (pag) => {
-  run({
-    limit: pag.pageSize,
-    page: pag?.current,
-  });
+const onDelete = key => {
+  store.dispatch('ROLE_DELETE', key).then(res => {
+    console.log(res)
+    notification.success({
+      message: 'Congratulations',
+      description: (res.data || {}).message || 'Request Successfully Done',
+    });
+  })
+    .catch(e => {
+      notification.error({
+        message: e.message,
+        description: ((e.response || {}).data || {}).message || 'Something Wrong',
+      });
+    });
 };
+
+const onEdit = id => {
+  router.push({name: 'Edit Role', params: {id}})
+}
+
 </script>
 <template>
   <div>
     <!-- Page Header -->
-    <CRow>
-      <CCol sm="6" xs="12" class="mb-4 mb-sm-0">
+    <CRow class="mb-4">
+      <CCol sm="6" xs="6">
         <span class="text-uppercase page-subtitle fs-6">Manage User</span>
-        <h4 class="page-title">User Permission</h4>
+        <a-breadcrumb>
+          <a-breadcrumb-item>
+            <router-link to="/">Home</router-link>
+          </a-breadcrumb-item>
+          <a-breadcrumb-item>All Role List</a-breadcrumb-item>
+        </a-breadcrumb>
       </CCol>
-      <CCol sm="6" xs="12" class="d-flex justify-content-end">
+      <CCol sm="6" xs="6" class="d-flex justify-content-end align-items-center">
         <a-button type="primary">
           <router-link to="/user/role/create" style="text-decoration: none">Add New Role</router-link>
         </a-button>
@@ -52,8 +66,26 @@ const handleTableChange = (pag) => {
     </CRow>
     <!-- End Page Header -->
     <!-- Datatable -->
-    <a-table :dataSource="dataSource" :columns="columns" :loading="loading" :pagination="pagination"
-             @change="handleTableChange" bordered/>
+    <a-table :dataSource="roleList" :columns="columns">
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'action'">
+          <a-button-group>
+            <a-tooltip placement="topLeft" title="Edit Role">
+              <a-button :icon="h(EditOutlined)" @click="onEdit(record.id)"/>
+            </a-tooltip>
+            <a-popconfirm placement="topRight"
+                          title="Are you sure delete this role?"
+                          ok-text="Yes"
+                          cancel-text="No"
+                          @confirm="onDelete(record.id)">
+              <a-tooltip placement="bottomLeft" title="Delete Role">
+                <a-button :icon="h(DeleteOutlined)"/>
+              </a-tooltip>
+            </a-popconfirm>
+          </a-button-group>
+        </template>
+      </template>
+    </a-table>
     <!-- End Datatable -->
   </div>
 </template>
