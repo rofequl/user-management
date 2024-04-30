@@ -1,7 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
+  "description": "User Role & Permission Management System API",
   "main": "index.js",
   "engines": {
     "npm": "10.5.0",
@@ -13,7 +13,7 @@
     "dev": "nodemon index.js",
     "migrate": "node database/migration.js"
   },
-  "author": "Nayem",
+  "author": "MdNayem",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",

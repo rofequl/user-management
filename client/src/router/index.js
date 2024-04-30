@@ -35,6 +35,11 @@ const routes = [
         path: '/user/:id/edit',
         name: 'Edit Role',
         component: () => import('@/views/Users/Role/EditRole.vue')
+      },
+      {
+        path: "/404",
+        name: "NotFound",
+        component: () => import("@/views/error/Error-404"),
       }
     ]
   },
@@ -43,6 +48,22 @@ const routes = [
     name: "Login",
     beforeEnter: isAdminLoggedOut,
     component: () => import("@/views/Login"),
+  },
+  {
+    path: "/error",
+    component: () => import("../layouts/Default.vue"),
+    children: [
+      {
+        meta: {title: 'Error 500'},
+        path: "/error",
+        name: "error-500",
+        component: () => import("@/views/error/Error-500"),
+      }
+    ]
+  },
+  {
+    path: "/:pathMatch(.*)", // Define a catch-all route using a param with a custom regexp
+    redirect: "/404" // Redirect all unknown paths to 404 page
   },
 ]
 
@@ -53,7 +74,15 @@ const router = createRouter({
     return {top: 0}
   },
 })
-
+// router.beforeEach((to, from, next) => {
+//   // Redirect unauthenticated users to login page
+//   if (!store.getters.isAuthenticated && to.name !== 'Login') next({ name: 'Login' });
+//   else {
+//     // Check if the route requires authentication and the user is logged in
+//     if (!store.getters.isAuthenticated) next({ name: 'Login' });
+//     else next();
+//   }
+// });
 router.beforeEach((to, from, next) => {
   store.getters.isLoadProfile ? next() : store.dispatch('VERIFY_AUTH').finally(next)
 })

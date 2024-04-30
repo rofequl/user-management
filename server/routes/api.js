@@ -13,13 +13,14 @@ router.post("/user/register", AuthController.register)
 router.post("/user/logout", authMiddleware, AuthController.logout);
 router.post("/user/token/refresh", JWTRefresh);
 
-// User Management API
+// App User Management API
 router.get("/user", authMiddleware, UserController.getUser);
 
 // User Role Api
 router.get("/role", authMiddleware, RoleController.getRole);
 router.post("/role", authMiddleware, RoleController.addRole);
 router.get("/role/:id", authMiddleware, RoleController.getRoleDetails);
+router.put("/role/:id", authMiddleware, RoleController.updateRole);
 router.delete("/role/:id", authMiddleware, RoleController.deleteRole);
 router.get("/permission/list", authMiddleware, RoleController.getPermission);
 

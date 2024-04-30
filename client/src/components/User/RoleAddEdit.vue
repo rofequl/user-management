@@ -3,6 +3,7 @@ import {CCol, CRow} from "@coreui/vue";
 import {computed, onMounted, reactive, ref, watch} from "vue";
 import store from "@/store";
 import router from "@/router";
+import {notification} from "ant-design-vue";
 
 const props = defineProps({
   isEdit: {
@@ -15,11 +16,18 @@ const props = defineProps({
   },
 })
 
-// Get List of all permission and updated it
+// Get List of all permission and role and updated it
 const allPermissions = computed(() => store.getters.permissionList)
+const roleDetails = computed(() => store.getters.roleDetails)
+const roleList = computed(() => store.getters.roleList)
+const cardLoading = ref(false);
+
 onMounted(async () => {
+  cardLoading.value = true
   !allPermissions.value.length > 0 ? await store.dispatch('PERMISSION_LIST') : permissionValueSet()
   props.isEdit ? await store.dispatch('ROLE_DETAILS', props.roleId) : ''
+  if (!roleList.value.length > 0) await store.dispatch('ROLE_LIST')
+  cardLoading.value = false
 });
 const updatedAllPermissions = ref([])
 watch(allPermissions, () => permissionValueSet());
@@ -37,6 +45,7 @@ const permissionValueSet = () => {
 const formRef = ref()
 const submitBtn = ref(false)
 const formState = reactive({
+  id: '',
   name: '',
   permission: []
 });
@@ -46,23 +55,56 @@ const rules = {
     {max: 100, message: 'Name maximum 100 character'}
   ],
 }
+watch(roleDetails, () => {
+  formState.id = roleDetails.value.id
+  formState.name = roleDetails.value.name
+  formState.permission = roleDetails.value.permissionIds
+  updatedAllPermissions.value.forEach(obj => {
+    obj.permission_list.forEach(perm => {
+      if (roleDetails.value.permissionIds.includes(perm.id)) perm.value = true;
+    });
+  });
+});
 
 const newPermissionUpdate = (data) => {
   let index = formState.permission.findIndex(value => value === data);
-  if (index < 0) formState.permission.push(data)
-  else formState.permission.splice(index, 1)
+  index < 0 ? formState.permission.push(data) : formState.permission.splice(index, 1)
 }
 // Form submit method::::
 const onSubmit = () => {
   submitBtn.value = true
   store.dispatch('ROLE_CREATE', formState)
-    .then(() => router.push({name: 'User Permission'}))
+    .then(() => {
+      notification.success({
+        message: 'Congratulations',
+        description: 'New role create successfully',
+      });
+      router.push({name: 'User Permission'})
+    })
+    .catch(err => requestFailed(err))
+    .finally(() => submitBtn.value = false)
+}
+// Form update method::::
+const onUpdate = () => {
+  submitBtn.value = true
+  store.dispatch('ROLE_UPDATE', {id: formState.id, data: formState})
+    .then(() => {
+      notification.success({
+        message: 'Congratulations',
+        description: 'Role update successfully',
+      });
+      router.push({name: 'User Permission'})
+    })
     .catch(err => requestFailed(err))
     .finally(() => submitBtn.value = false)
 }
 // Form submit error notify::::
 const requestFailed = (err) => {
-  console.log(err)
+  console.log(((err.response || {}).data || {}));
+  notification.error({
+    message: err.message,
+    description: ((err.response || {}).data || {}).message || ((err.response || {}).data || {}).errors.name.msg,
+  });
 }
 </script>
 <template>
@@ -84,8 +126,9 @@ const requestFailed = (err) => {
       </CCol>
     </CRow>
     <!-- End Page Header -->
-    <a-card :title="isEdit? 'Edit Role':'Create New Role'" :bordered="false">
-      <a-form ref="formRef" :model="formState" autocomplete="off" @finish="onSubmit" :rules="rules">
+    <a-card :title="isEdit? 'Edit Role':'Create New Role'" :bordered="false" :loading="cardLoading">
+      <a-form ref="formRef" :model="formState" autocomplete="off" @finish="isEdit? onUpdate(): onSubmit()"
+              :rules="rules">
         <a-form-item label="Role Name" name="name" :labelCol="{span: 0}" :wrapperCol="{span: 6}">
           <a-input v-model:value="formState.name"/>
         </a-form-item>
@@ -101,7 +144,8 @@ const requestFailed = (err) => {
           </a-flex>
         </a-card>
         <a-row class="mt-4">
-          <a-col :span="24" style="text-align: right">
+          <a-col :span="24" class="d-flex gap-2 justify-content-end">
+            <router-link to="/user/role"><a-button>Cancel</a-button></router-link>
             <a-button type="primary" html-type="submit" :loading="submitBtn" :disabled="submitBtn" v-if="isEdit">
               Update
             </a-button>

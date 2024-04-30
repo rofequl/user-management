@@ -1,6 +1,9 @@
+// noinspection ExceptionCaughtLocallyJS
+
 const log = require("../../../config/logging"),
-    {models} = require('../../../app/models'),
+    {models} = require('../../models'),
     {body, validationResult} = require("express-validator");
+const sequelize = require("../../models");
 
 // Role list send by API
 exports.getRole = async (req, res) => {
@@ -75,7 +78,10 @@ exports.getPermission = async (req, res) => {
 
 // New Role add method
 module.exports.addRole = [
-    body("name", "Role name required!").notEmpty(),
+    body("name", "Role name required!").notEmpty().custom(async (value) => {
+        const user = await models.Role.findOne({where: {name: value}});
+        if (user) return Promise.reject('Role already exists');
+    }),
     async (req, res) => {
         try {
             // Validation error message return to user
@@ -95,6 +101,57 @@ module.exports.addRole = [
             })
         } catch (err) {
             log.Error(err.message, 'RoleController', 'addRole', err.errors, function () {
+                res.status(500).json({success: false, message: "Error saving record", error: err.message});
+            });
+        }
+    }
+]
+
+// Update Role method
+module.exports.updateRole = [
+    body("name", "Role name required!").notEmpty().custom(async (value, {req}) => {
+        const role = await models.Role.findOne({where: {name: value}});
+        console.log(req.params.id)
+        if (role && role.id !== parseInt(req.params.id)) return Promise.reject('Role already exists');
+    }),
+    async (req, res) => {
+        const {id} = req.params;
+        const {name, permission} = req.body;
+        try {
+            // Validation error message return to user
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) return res.status(422).json({success: false, errors: errors.mapped()});
+
+            // Find the role by ID
+            const role = await models.Role.findByPk(id);
+            if (!role) return res.status(404).json({success: false, message: 'Role not found'});
+
+            // Begin transaction
+            const transaction = await sequelize.transaction();
+            try {
+                // Update role name
+                role.name = name;
+                await role.save({transaction});
+
+                // Remove all permissions if permissions array is not provided or is empty
+                // Set permissions using setPermissions() method
+                if (!permission || permission.length === 0) await role.setPermissions([], {transaction});
+                else await role.setPermissions(permission, {transaction});
+
+                // Commit transaction
+                await transaction.commit();
+
+                res.status(200).json({
+                    success: true,
+                    data: role,
+                });
+            } catch (error) {
+                // Rollback transaction on error
+                await transaction.rollback();
+                throw error; // Throw the error for the outer catch block to handle
+            }
+        } catch (err) {
+            log.Error(err.message, 'RoleController', 'updateRole', err.errors, function () {
                 res.status(500).json({success: false, message: "Error saving record", error: err.message});
             });
         }

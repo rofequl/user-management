@@ -3,6 +3,7 @@ import {CCol, CRow} from "@coreui/vue";
 import apiService from "@/core/services/api.service";
 import {usePagination} from "vue-request";
 import {computed} from "vue";
+import UserAddEdit from "@/components/User/UserAddEdit.vue";
 
 const getUserList = params => apiService.get('user', {params})
 
@@ -57,8 +58,11 @@ const handleTableChange = (pag) => {
     </CRow>
     <!-- End Page Header -->
     <!-- Datatable -->
-    <a-table :dataSource="dataSource" :columns="columns" :loading="loading" :pagination="pagination"
-             @change="handleTableChange" bordered/>
+    <a-card :bordered="false" :bodyStyle="{padding: 0}">
+      <a-table :dataSource="dataSource" :columns="columns" :loading="loading" :pagination="pagination"
+               @change="handleTableChange" bordered/>
+    </a-card>
     <!-- End Datatable -->
+    <UserAddEdit/>
   </div>
 </template>

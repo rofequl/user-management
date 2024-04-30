@@ -13,6 +13,12 @@ app.get('/', (req, res) => {
 	`);
 })
 
+// Middleware function to introduce a delay for all routes
+app.use((req, res, next) => {
+    const delayMilliseconds = 500; // 2 seconds delay, adjust as needed
+    setTimeout(next, delayMilliseconds);
+});
+
 async function assertDatabaseConnectionOk() {
     console.log(`Checking database connection...`);
     try {

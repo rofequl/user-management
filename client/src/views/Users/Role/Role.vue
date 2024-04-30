@@ -1,14 +1,17 @@
 <script setup>
 import {CRow, CCol} from "@coreui/vue";
-import {computed, h, onMounted} from 'vue';
+import {computed, h, onMounted, ref} from 'vue';
 import store from "@/store";
 import {EditOutlined, DeleteOutlined} from "@ant-design/icons-vue";
 import {notification} from "ant-design-vue";
 import router from "@/router";
 
 const roleList = computed(() => store.getters.roleList)
-onMounted(() => {
-  if (!roleList.value.length > 0) store.dispatch('ROLE_LIST')
+const tableLoad = ref(false)
+onMounted(async () => {
+  tableLoad.value = true
+  if (!roleList.value.length > 0) await store.dispatch('ROLE_LIST')
+  tableLoad.value = false
 });
 
 const columns = [
@@ -26,7 +29,6 @@ const columns = [
 
 const onDelete = key => {
   store.dispatch('ROLE_DELETE', key).then(res => {
-    console.log(res)
     notification.success({
       message: 'Congratulations',
       description: (res.data || {}).message || 'Request Successfully Done',
@@ -59,33 +61,35 @@ const onEdit = id => {
         </a-breadcrumb>
       </CCol>
       <CCol sm="6" xs="6" class="d-flex justify-content-end align-items-center">
-        <a-button type="primary">
-          <router-link to="/user/role/create" style="text-decoration: none">Add New Role</router-link>
-        </a-button>
+        <router-link to="/user/role/create">
+          <a-button type="primary">Add New Role</a-button>
+        </router-link>
       </CCol>
     </CRow>
     <!-- End Page Header -->
     <!-- Datatable -->
-    <a-table :dataSource="roleList" :columns="columns">
-      <template #bodyCell="{ column, record }">
-        <template v-if="column.dataIndex === 'action'">
-          <a-button-group>
-            <a-tooltip placement="topLeft" title="Edit Role">
-              <a-button :icon="h(EditOutlined)" @click="onEdit(record.id)"/>
-            </a-tooltip>
-            <a-popconfirm placement="topRight"
-                          title="Are you sure delete this role?"
-                          ok-text="Yes"
-                          cancel-text="No"
-                          @confirm="onDelete(record.id)">
-              <a-tooltip placement="bottomLeft" title="Delete Role">
-                <a-button :icon="h(DeleteOutlined)"/>
+    <a-card :bordered="false" :bodyStyle="{padding: 0}">
+      <a-table :dataSource="roleList" :columns="columns" :loading="tableLoad">
+        <template #bodyCell="{ column, record }">
+          <template v-if="column.dataIndex === 'action'">
+            <a-button-group>
+              <a-tooltip placement="topLeft" title="Edit Role">
+                <a-button :icon="h(EditOutlined)" @click="onEdit(record.id)"/>
               </a-tooltip>
-            </a-popconfirm>
-          </a-button-group>
+              <a-popconfirm placement="topRight"
+                            title="Are you sure delete this role?"
+                            ok-text="Yes"
+                            cancel-text="No"
+                            @confirm="onDelete(record.id)">
+                <a-tooltip placement="bottomLeft" title="Delete Role">
+                  <a-button :icon="h(DeleteOutlined)"/>
+                </a-tooltip>
+              </a-popconfirm>
+            </a-button-group>
+          </template>
         </template>
-      </template>
-    </a-table>
+      </a-table>
+    </a-card>
     <!-- End Datatable -->
   </div>
 </template>

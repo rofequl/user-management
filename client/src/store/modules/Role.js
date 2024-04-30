@@ -48,6 +48,18 @@ const role = {
           })
       })
     },
+    ROLE_UPDATE({commit}, params) {
+      return new Promise((resolve, reject) => {
+        ApiService.put("role/" + params.id, params.data)
+          .then(({data}) => {
+            commit('ROLE_MODIFY', data.data);
+            resolve()
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
+    },
     ROLE_DELETE({commit}, id) {
       return new Promise((resolve, reject) => {
         ApiService.delete("role/" + id)
@@ -85,6 +97,9 @@ const role = {
     },
     ROLE_REMOVE: (state, key) => {
       state.role = state.role.filter(item => item.id !== key);
+    },
+    ROLE_MODIFY: (state, data) => {
+      Object.assign(state.role.find(element => element.id === data.id), data);
     },
     ROLE_Details_ADD: (state, data) => {
       state.role_details = data.data;

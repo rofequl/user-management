@@ -38,7 +38,11 @@ module.exports.login = [
 
 module.exports.register = [
     body("name", "User name required!").notEmpty(),
-    body("email", "User email required!").notEmpty(),
+    body("email", "User email required!").notEmpty().isEmail().withMessage('Invalid email format')
+        .custom(async (value) => {
+            const user = await models.User.findOne({where: {email: value}});
+            if (user) return Promise.reject('Email already exists');
+        }),
     body("password", "User password required!").notEmpty().isLength({
         min: 6,
         max: 20,

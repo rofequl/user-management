@@ -23,6 +23,10 @@ apiService.interceptors.response.use(response => response, async (error) => {
     await store.commit('PURGE_AUTH')
     await router.push({name: 'Login'});
   }
+  // else if (status === 404) await router.push({name: 'NotFound'});
+  // else if (status === 500) await router.push({name: 'error-500'});
+  // If the response status is 404, redirect to the 404 page
+  //
 
   if (status === 403 && error.response.data.error === 'Token expired') {
     try {
