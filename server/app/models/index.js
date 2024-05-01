@@ -10,7 +10,7 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
         acquire: dbConfig.pool.acquire,
         idle: dbConfig.pool.idle
     },
-    operatorsAliases: 0,
+    operatorsAliases: 0
 });
 
 const modelDefiners = [

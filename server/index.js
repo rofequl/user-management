@@ -1,7 +1,8 @@
 const express = require('express')
 const app = express()
 const sequelize = require('./app/models');
-const port = 3030
+require('dotenv').config();
+const port = process.env.APP_PORT
 
 // We provide a root route just as an example
 app.get('/', (req, res) => {
@@ -14,10 +15,10 @@ app.get('/', (req, res) => {
 })
 
 // Middleware function to introduce a delay for all routes
-app.use((req, res, next) => {
-    const delayMilliseconds = 500; // 2 seconds delay, adjust as needed
-    setTimeout(next, delayMilliseconds);
-});
+// app.use((req, res, next) => {
+//     const delayMilliseconds = 500; // 2 seconds delay, adjust as needed
+//     setTimeout(next, delayMilliseconds);
+// });
 
 async function assertDatabaseConnectionOk() {
     console.log(`Checking database connection...`);
@@ -35,7 +36,7 @@ async function init() {
     await assertDatabaseConnectionOk();
     require('./app/Kernel')(app)
     app.listen(port, () => {
-        console.log(`Express server started on port ${port}. Try some routes, such as '/api/users'.`);
+        console.log(`Express server started on port ${port}`);
     });
 }
 

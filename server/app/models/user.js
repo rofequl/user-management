@@ -67,5 +67,15 @@ module.exports = (sequelize) => {
                 exclude: ['password', 'salt']
             }
         },
+        hooks: {
+            afterFind: (users) => {
+                if (!Array.isArray(users)) users = [users];
+                users.forEach(user => {
+                    if (user.profilePicture) {
+                        user.profilePicture = `${process.env.APP_URL + ':' + process.env.APP_PORT}/${user.profilePicture}`;
+                    }
+                });
+            }
+        }
     })
 }
