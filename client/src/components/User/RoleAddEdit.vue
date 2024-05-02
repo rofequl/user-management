@@ -100,7 +100,6 @@ const onUpdate = () => {
 }
 // Form submit error notify::::
 const requestFailed = (err) => {
-  console.log(((err.response || {}).data || {}));
   notification.error({
     message: err.message,
     description: ((err.response || {}).data || {}).message || ((err.response || {}).data || {}).errors.name.msg,

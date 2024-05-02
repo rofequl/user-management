@@ -1,50 +1,146 @@
 <script setup>
-import {reactive, ref, toRaw} from 'vue';
+import {computed, onMounted, reactive, ref} from 'vue';
+import store from "@/store";
+import {notification} from "ant-design-vue";
+
+// Get role list for user creation role set
+const roleList = computed(() => store.getters.roleList)
+onMounted(async () => {
+  if (!roleList.value.length > 0) await store.dispatch('ROLE_LIST')
+});
 
 //  <--- Variable ---> //
 // Data value declaration::::
 const formRef = ref();
-const visible = ref(true);
+const visible = ref(false);
 const formState = reactive({
-  title: '',
-  description: '',
-  modifier: 'public',
+  name: '',
+  email: '',
+  gender: undefined,
+  roleId: undefined,
+  password: '',
+  confirm_password: '',
 });
+const emit = defineEmits(['update']);
+
+// Password confirmation custom validation
+const validatePass = () => {
+  if (formState.confirm_password !== '') formRef.value.validateFields('confirm_password');
+  return Promise.resolve();
+}
+const validatePass2 = (_rule, value) => value !== formState.password ? Promise.reject("Two inputs don't match!") : Promise.resolve();
+// Form input validation rule
 const rules = {
   name: [
-    {required: true, message: 'Please enter your role name'},
+    {required: true, message: 'Please enter user name', trigger: 'blur'},
     {max: 100, message: 'Name maximum 100 character'}
   ],
+  email: [
+    {required: true, message: 'Please enter user email'},
+    {max: 100, message: 'Name maximum 100 character'},
+    {type: 'email', message: 'The input is not valid E-mail!'}
+  ],
+  gender: [
+    {required: true, message: 'Please select user gender'},
+  ],
+  roleId: [
+    {required: true, message: 'Please select user role'},
+  ],
+  password: [
+    {required: true, message: 'Please input user password!'},
+    {min: 6, message: 'Password minimum 6 character'},
+    {max: 20, message: 'Password maximum 20 character'},
+    {validator: validatePass}
+  ],
+  confirm_password: [
+    {required: true, message: 'Please input user confirm password!'},
+    {min: 6, message: 'Password minimum 6 character'},
+    {max: 20, message: 'Password maximum 20 character'},
+    {validator: validatePass2}
+  ],
 }
+// Model save button action
 const onSubmit = () => {
   formRef.value
     .validateFields()
     .then(values => {
-      console.log('Received values of form: ', values);
-      console.log('formState: ', toRaw(formState));
+      store.dispatch('USER_CREATE', values)
+        .then(() => {
+          emit('update')
+          notification.success({
+            message: 'Congratulations',
+            description: 'New user create successfully',
+          });
+        })
+        .catch(err => requestFailed(err))
       visible.value = false;
       formRef.value.resetFields();
-      console.log('reset formState: ', toRaw(formState));
     })
-    .catch(info => {
-      console.log('Validate Failed:', info);
-    });
 };
+// Form submit error notify::::
+const requestFailed = (err) => {
+  notification.error({
+    message: err.message,
+    description: ((err.response || {}).data || {}).message || ((err.response || {}).data || {}).errors.name.msg,
+  });
+}
+
+const modal = () => {
+  visible.value = true
+}
+
+defineExpose({
+  modal
+})
 </script>
 <template>
   <div>
     <a-modal v-model:open="visible" title="Create a new user" ok-text="Create"
              cancel-text="Cancel" autocomplete="off" @ok="onSubmit">
-      <a-form ref="formRef" :model="formState" name="user_create_edit">
-        <a-flex gap="middle" align="start" vertical>
-          <a-form-item name="title" class="w-50">
-            <a-input v-model:value="formState.title" class="w-100"/>
-          </a-form-item>
-
-          <a-form-item name="title" class="w-50">
-            <a-input v-model:value="formState.title"/>
-          </a-form-item>
-        </a-flex>
+      <a-form ref="formRef" :model="formState" autocomplete="off" :rules="rules">
+        <a-row :gutter="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+          <a-col class="gutter-row" :xs="24" :md="12">
+            <a-form-item name="name">
+              <a-input v-model:value="formState.name" placeholder="Name" class="w-100"/>
+            </a-form-item>
+          </a-col>
+          <a-col class="gutter-row" :xs="24" :md="12">
+            <a-form-item name="email">
+              <a-input v-model:value="formState.email" placeholder="Email"/>
+            </a-form-item>
+          </a-col>
+        </a-row>
+        <a-row :gutter="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+          <a-col class="gutter-row" :xs="24" :md="12">
+            <a-form-item name="gender">
+              <a-select ref="select" class="w-100" placeholder="Select Gender" v-model:value="formState.gender">
+                <a-select-option value="Male">Male</a-select-option>
+                <a-select-option value="Female">Female</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <a-col class="gutter-row" :xs="24" :md="12">
+            <a-form-item name="roleId">
+              <a-select ref="select" class="w-100" placeholder="Select Role" v-model:value="formState.roleId">
+                <a-select-option v-for="item in roleList" :value="item.id" :key="item.id">
+                  {{ item.name }}
+                </a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+        </a-row>
+        <a-row :gutter="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+          <a-col class="gutter-row" :xs="24" :md="12">
+            <a-form-item name="password">
+              <a-input v-model:value="formState.password" placeholder="Password" class="w-100"/>
+            </a-form-item>
+          </a-col>
+          <a-col class="gutter-row" :xs="24" :md="12">
+            <a-form-item name="confirm_password">
+              <a-input v-model:value="formState.confirm_password" placeholder="Confirm Password"/>
+            </a-form-item>
+          </a-col>
+        </a-row>
       </a-form>
     </a-modal>
   </div>
