@@ -15,6 +15,7 @@ router.post("/user/token/refresh", JWTRefresh);
 // App User Management API
 router.get("/user", authMiddleware, UserController.getUser);
 router.post("/user", authMiddleware, UserController.addUser)
+router.put("/user/:id", authMiddleware, UserController.updateUser)
 
 // User Role Api
 router.get("/role", authMiddleware, RoleController.getRole);

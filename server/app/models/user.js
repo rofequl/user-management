@@ -71,9 +71,7 @@ module.exports = (sequelize) => {
             afterFind: (users) => {
                 if (!Array.isArray(users)) users = [users];
                 users.forEach(user => {
-                    if (user.profilePicture) {
-                        user.profilePicture = `${process.env.APP_URL + ':' + process.env.APP_PORT}/${user.profilePicture}`;
-                    }
+                    if (user && user.profilePicture) user.profilePicture = `${process.env.APP_URL + ':' + process.env.APP_PORT}/${user.profilePicture}`;
                 });
             }
         }

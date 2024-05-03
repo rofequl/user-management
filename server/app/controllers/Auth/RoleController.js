@@ -111,7 +111,6 @@ module.exports.addRole = [
 module.exports.updateRole = [
     body("name", "Role name required!").notEmpty().custom(async (value, {req}) => {
         const role = await models.Role.findOne({where: {name: value}});
-        console.log(req.params.id)
         if (role && role.id !== parseInt(req.params.id)) return Promise.reject('Role already exists');
     }),
     async (req, res) => {

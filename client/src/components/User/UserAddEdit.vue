@@ -13,7 +13,9 @@ onMounted(async () => {
 // Data value declaration::::
 const formRef = ref();
 const visible = ref(false);
+const modalAdd = ref(true);
 const formState = reactive({
+  id: '',
   name: '',
   email: '',
   gender: undefined,
@@ -59,7 +61,7 @@ const rules = {
     {validator: validatePass2}
   ],
 }
-// Model save button action
+// Model form save button action
 const onSubmit = () => {
   formRef.value
     .validateFields()
@@ -69,7 +71,26 @@ const onSubmit = () => {
           emit('update')
           notification.success({
             message: 'Congratulations',
-            description: 'New user create successfully',
+            description: 'New user created successfully',
+          });
+        })
+        .catch(err => requestFailed(err))
+      visible.value = false;
+      formRef.value.resetFields();
+    })
+};
+
+// Model form update button action
+const onUpdate = () => {
+  formRef.value
+    .validateFields()
+    .then(values => {
+      store.dispatch('USER_UPDATE', {id: formState.id, data: values})
+        .then(() => {
+          emit('update')
+          notification.success({
+            message: 'Congratulations',
+            description: 'User updated successfully',
           });
         })
         .catch(err => requestFailed(err))
@@ -81,11 +102,26 @@ const onSubmit = () => {
 const requestFailed = (err) => {
   notification.error({
     message: err.message,
-    description: ((err.response || {}).data || {}).message || ((err.response || {}).data || {}).errors.name.msg,
+    description: ((err.response || {}).data || {}).message || ((err.response || {}).data || {}).errors.email.msg,
   });
 }
 
-const modal = () => {
+const modal = (e) => {
+  if (!e) {
+    modalAdd.value = true
+    formState.id = ''
+    formState.name = ''
+    formState.email = ''
+    formState.gender = undefined
+    formState.roleId = undefined
+  } else {
+    modalAdd.value = false
+    formState.id = e.id
+    formState.name = e.name
+    formState.email = e.email
+    formState.gender = e.gender
+    formState.roleId = e.roleId
+  }
   visible.value = true
 }
 
@@ -95,8 +131,9 @@ defineExpose({
 </script>
 <template>
   <div>
-    <a-modal v-model:open="visible" title="Create a new user" ok-text="Create"
-             cancel-text="Cancel" autocomplete="off" @ok="onSubmit">
+    <a-modal v-model:open="visible" :title="modalAdd? 'Create a new user':'Edit this user'"
+             :ok-text="modalAdd? 'Create':'Update'"
+             cancel-text="Cancel" autocomplete="off" @ok="modalAdd? onSubmit(): onUpdate()">
       <a-form ref="formRef" :model="formState" autocomplete="off" :rules="rules">
         <a-row :gutter="{ xs: 8, sm: 16, md: 24, lg: 32 }">
           <a-col class="gutter-row" :xs="24" :md="12">

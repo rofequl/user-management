@@ -16,6 +16,18 @@ const user = {
           })
       })
     },
+    // eslint-disable-next-line no-unused-vars
+    USER_UPDATE({commit}, params) {
+      return new Promise((resolve, reject) => {
+        ApiService.put("user/" + params.id, params.data)
+          .then(() => {
+            resolve()
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
+    },
   },
   mutations: {}
 }

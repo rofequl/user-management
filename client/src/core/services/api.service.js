@@ -16,6 +16,8 @@ apiService.interceptors.request.use((config) => {
 });
 
 // Response interceptor for API calls
+let isRefreshingToken = false;
+let queuedRequests = [];
 apiService.interceptors.response.use(response => response, async (error) => {
   const status = error.response ? error.response.status : null
 
@@ -29,6 +31,12 @@ apiService.interceptors.response.use(response => response, async (error) => {
   //
 
   if (status === 403 && error.response.data.error === 'Token expired') {
+    if (isRefreshingToken) {
+      return new Promise((resolve, reject) => {
+        queuedRequests.push({resolve, reject, originalRequest: error.config});
+      });
+    }
+    isRefreshingToken = true;
     try {
       const {data} = await apiService.post('user/token/refresh');
       JwtService.destroyToken();
@@ -44,6 +52,10 @@ apiService.interceptors.response.use(response => response, async (error) => {
       await store.commit('PURGE_AUTH');
       await router.push({name: 'Login'});
       return Promise.reject(refreshError);
+    } finally {
+      isRefreshingToken = false;
+      queuedRequests.forEach(request => request.resolve(apiService(request.originalRequest)));
+      queuedRequests = [];
     }
   }
   return Promise.reject(error);
