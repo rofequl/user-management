@@ -17,27 +17,44 @@ const routes = [
         component: () => import('@/views/Dashboard.vue')
       },
       {
-        path: '/profile',
+        path: 'profile',
         name: 'Profile',
-        component: () => import('@/views/Auth/Profile.vue')
+        component: () => import('@/views/Account/Profile.vue')
       },
       {
-        path: '/user/list',
+        path: 'setting',
+        name: 'Setting',
+        component: () => import('@/views/Account/Setting/Index.vue'),
+        children: [
+          {
+            path: 'basic',
+            name: 'Basic Setting',
+            component: () => import('@/views/Account/Setting/BasicSetting.vue')
+          },
+          {
+            path: 'security',
+            name: 'Security Setting',
+            component: () => import('@/views/Account/Setting/Security.vue')
+          }
+        ]
+      },
+      {
+        path: 'user/list',
         name: 'All User',
         component: () => import('@/views/Users/UserList.vue')
       },
       {
-        path: '/user/role',
+        path: 'user/role',
         name: 'User Permission',
         component: () => import('@/views/Users/Role/Role.vue')
       },
       {
-        path: '/user/role/create',
+        path: 'user/role/create',
         name: 'New Role',
         component: () => import('@/views/Users/Role/AddRole.vue')
       },
       {
-        path: '/user/:id/edit',
+        path: 'user/:id/edit',
         name: 'Edit Role',
         component: () => import('@/views/Users/Role/EditRole.vue')
       },

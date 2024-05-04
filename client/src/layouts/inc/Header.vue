@@ -22,7 +22,7 @@ const headerClassNames = ref('mb-4 p-0')
             <CAvatar :src="avatar" size="md"/>
           </CDropdownToggle>
           <CDropdownMenu class="pt-0">
-            <CDropdownItem>
+            <CDropdownItem href="/profile">
               <CIcon icon="cil-user"/>
               Profile
             </CDropdownItem>

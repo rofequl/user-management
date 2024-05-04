@@ -8,6 +8,10 @@ export default createStore({
     sidebarVisible: true,
     sidebarUnfoldable: false,
     theme: 'light',
+    isMobile: false,
+  },
+  getters: {
+    isMobile: (state) => state.isMobile,
   },
   mutations: {
     toggleSidebar(state) {
@@ -18,6 +22,9 @@ export default createStore({
     },
     updateSidebarVisible(state, payload) {
       state.sidebarVisible = payload.value
+    },
+    TOGGLE_MOBILE_TYPE: (state, isMobile) => {
+      state.isMobile = isMobile
     },
   },
   actions: {},
