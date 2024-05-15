@@ -19,17 +19,21 @@ const headerClassNames = ref('mb-4 p-0')
       <CHeaderNav>
         <CDropdown placement="bottom-end" variant="nav-item">
           <CDropdownToggle class="py-0 pe-0" :caret="false">
-            <CAvatar :src="avatar" size="md"/>
+            <CAvatar :src="store.getters.currentUser.profilePicture" size="md"/>
           </CDropdownToggle>
           <CDropdownMenu class="pt-0">
-            <CDropdownItem href="/profile">
-              <CIcon icon="cil-user"/>
-              Profile
-            </CDropdownItem>
-            <CDropdownItem>
-              <CIcon icon="cil-settings"/>
-              Settings
-            </CDropdownItem>
+            <router-link :to="{name: 'Profile'}" class="text-decoration-none">
+              <CDropdownItem>
+                <CIcon icon="cil-user"/>
+                Profile
+              </CDropdownItem>
+            </router-link>
+            <router-link :to="{name: 'Basic Setting'}" class="text-decoration-none">
+              <CDropdownItem>
+                <CIcon icon="cil-settings"/>
+                Settings
+              </CDropdownItem>
+            </router-link>
             <CDropdownDivider/>
             <CDropdownItem>
               <CIcon icon="cil-lock-locked"/>

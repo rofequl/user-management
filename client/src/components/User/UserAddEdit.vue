@@ -34,7 +34,7 @@ const validatePass2 = (_rule, value) => value !== formState.password ? Promise.r
 // Form input validation rule
 const rules = {
   name: [
-    {required: true, message: 'Please enter user name', trigger: 'blur'},
+    {required: true, message: 'Please enter user name'},
     {max: 100, message: 'Name maximum 100 character'}
   ],
   email: [

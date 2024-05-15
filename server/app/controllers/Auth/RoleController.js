@@ -1,9 +1,7 @@
-// noinspection ExceptionCaughtLocallyJS
-
 const log = require("../../../config/logging"),
     {models} = require('../../models'),
-    {body, validationResult} = require("express-validator");
-const sequelize = require("../../models");
+    {body, validationResult} = require("express-validator"),
+    sequelize = require("../../models")
 
 // Role list send by API
 exports.getRole = async (req, res) => {

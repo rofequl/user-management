@@ -59,6 +59,16 @@ const routes = [
         component: () => import('@/views/Users/Role/EditRole.vue')
       },
       {
+        path: 'call/category',
+        name: 'Call Category',
+        component: () => import('@/views/CallSupport/Category/index.vue')
+      },
+      {
+        path: 'call/support',
+        name: 'Call Support',
+        component: () => import('@/views/CallSupport/Support/index.vue')
+      },
+      {
         path: "/404",
         name: "NotFound",
         component: () => import("@/views/error/Error-404"),

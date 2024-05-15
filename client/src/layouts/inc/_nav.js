@@ -22,5 +22,23 @@ export default [
         to: '/user/role'
       }
     ]
+  },
+  {
+    component: 'CNavGroup',
+    name: 'Call Support',
+    to: '/call',
+    icon: 'cil-user',
+    items: [
+      {
+        component: 'CNavItem',
+        name: 'Call Support Category',
+        to: '/call/category'
+      },
+      {
+        component: 'CNavItem',
+        name: 'Call Support Manage',
+        to: '/call/support'
+      }
+    ]
   }
 ]

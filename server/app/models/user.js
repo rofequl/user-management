@@ -12,6 +12,9 @@ module.exports = (sequelize) => {
                 notNull: true
             }
         },
+        bio: {
+            type: DataTypes.STRING
+        },
         username: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -43,6 +46,12 @@ module.exports = (sequelize) => {
             validate: {
                 isIn: [['Male', 'Female']],
             }
+        },
+        address: {
+            type: DataTypes.TEXT
+        },
+        position: {
+            type: DataTypes.STRING
         },
         password: {
             type: DataTypes.STRING,

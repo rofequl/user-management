@@ -44,5 +44,5 @@ module.exports = (sequelize) => {
             allowNull: false,
             defaultValue: DataTypes.NOW
         }
-    }, {sequelize, timestamps: false})
+    }, {sequelize, tableName: 'login_info', timestamps: false})
 }

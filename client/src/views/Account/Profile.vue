@@ -1,8 +1,11 @@
 <!--suppress ALL -->
 <script setup>
 import {SettingFilled, MailFilled, PhoneFilled} from "@ant-design/icons-vue";
-import {ref} from "vue";
+import {computed, ref} from "vue";
+import store from "@/store";
+import {format} from 'date-fns';
 
+const user = computed(() => store.getters.currentUser)
 const hideTooltipStr = ref('Hide Edit tooltip.');
 const activeKey = ref('1');
 
@@ -10,7 +13,7 @@ const activeKey = ref('1');
 <template>
   <div>
     <!-- Start Page Header -->
-    <a-page-header title="Account Overview" class="p-0 mb-4">
+    <a-page-header title="Account Overview" class="p-0 mb-2">
       <template #breadcrumb>
         <a-breadcrumb class="fs-7">
           <a-breadcrumb-item>
@@ -25,11 +28,12 @@ const activeKey = ref('1');
     <a-card class="w-100 mb-5" :bordered="false" size="default">
       <div class="d-flex flex-column flex-md-row gap-3 gap-md-0 justify-content-between mb-4">
         <a-flex gap="middle">
-          <a-avatar shape="square" src="http://localhost:3030/public/images/profile.png" :size="84"/>
+          <a-avatar shape="square" :src="user.profilePicture" :size="84"/>
           <a-flex vertical justify="space-between">
-            <a-typography-title :level="4" class="mb-0">Nayem</a-typography-title>
-            <a-typography-paragraph>ok</a-typography-paragraph>
-            <router-link to="/" class="gap-1 text-success text-decoration-none fw-semibold" style="text-decoration: underline">
+            <a-typography-title :level="4" class="mb-0">{{ user.name }}</a-typography-title>
+            <a-typography-paragraph>{{ user.bio }}</a-typography-paragraph>
+            <router-link :to="{name: 'Basic Setting'}" class="gap-1 text-success text-decoration-none fw-semibold"
+                         style="text-decoration: underline">
               <SettingFilled/>
               Edit Profile
             </router-link>
@@ -38,11 +42,11 @@ const activeKey = ref('1');
         <div class="d-flex flex-row flex-md-column gap-1 justify-content-between justify-content-md-start">
           <a-typography-text class="text-info-emphasis fw-semibold">
             <MailFilled class="me-2 text-success"/>
-            nayem@uysys.com
+            {{ user.email }}
           </a-typography-text>
-          <a-typography-text class="text-info-emphasis fw-semibold">
+          <a-typography-text class="text-info-emphasis fw-semibold" v-if="user.mobile">
             <PhoneFilled class="me-2 text-success"/>
-            01966634890
+            {{ user.mobile }}
           </a-typography-text>
         </div>
       </div>
@@ -58,7 +62,7 @@ const activeKey = ref('1');
                 <!--end::Label-->
                 <!--begin::Col-->
                 <div class="col-lg-8">
-                  <span class="fw-semibold" style="color: #504b4b">Nayem Islam</span>
+                  <span class="fw-semibold" style="color: #504b4b">{{ user.name }}</span>
                 </div>
                 <!--end::Col-->
               </div>
@@ -71,7 +75,7 @@ const activeKey = ref('1');
                 <!--end::Label-->
                 <!--begin::Col-->
                 <div class="col-lg-8">
-                  <span class="fw-semibold" style="color: #504b4b">nayemfzvenebyh</span>
+                  <span class="fw-semibold" style="color: #504b4b">{{ user.username }}</span>
                 </div>
                 <!--end::Col-->
               </div>
@@ -84,7 +88,9 @@ const activeKey = ref('1');
                 <!--end::Label-->
                 <!--begin::Col-->
                 <div class="col-lg-8">
-                  <span class="fw-semibold" style="color: #504b4b">2 May, 2080</span>
+                  <span class="fw-semibold" style="color: #504b4b">{{
+                      user.dob ? format(user.dob, 'dd MMM, yyyy') : ''
+                      }}</span>
                 </div>
                 <!--end::Col-->
               </div>
@@ -97,7 +103,7 @@ const activeKey = ref('1');
                 <!--end::Label-->
                 <!--begin::Col-->
                 <div class="col-lg-8">
-                  <span class="fw-semibold" style="color: #504b4b">nayem@gmail.com</span>
+                  <span class="fw-semibold" style="color: #504b4b">{{ user.email }}</span>
                 </div>
                 <!--end::Col-->
               </div>
@@ -110,7 +116,7 @@ const activeKey = ref('1');
                 <!--end::Label-->
                 <!--begin::Col-->
                 <div class="col-lg-8">
-                  <span class="fw-semibold" style="color: #504b4b">2/5 Main Road, Demra Dhaka, Bangladesh </span>
+                  <span class="fw-semibold" style="color: #504b4b">{{ user.address }}</span>
                 </div>
                 <!--end::Col-->
               </div>
@@ -124,7 +130,7 @@ const activeKey = ref('1');
                 <!--end::Label-->
                 <!--begin::Col-->
                 <div class="col-lg-8">
-                  <span class="fw-semibold" style="color: #504b4b">Male</span>
+                  <span class="fw-semibold" style="color: #504b4b">{{ user.gender }}</span>
                 </div>
                 <!--end::Col-->
               </div>
@@ -137,7 +143,7 @@ const activeKey = ref('1');
                 <!--end::Label-->
                 <!--begin::Col-->
                 <div class="col-lg-8">
-                  <span class="fw-semibold" style="color: #504b4b">12 Apr, 2022</span>
+                  <span class="fw-semibold" style="color: #504b4b">{{ format(user.createdAt, 'dd MMM, yyyy') }}</span>
                 </div>
                 <!--end::Col-->
               </div>
@@ -150,7 +156,7 @@ const activeKey = ref('1');
                 <!--end::Label-->
                 <!--begin::Col-->
                 <div class="col-lg-8">
-                  <span class="fw-semibold" style="color: #504b4b">Software Engineer</span>
+                  <span class="fw-semibold" style="color: #504b4b">{{ user.position }}</span>
                 </div>
                 <!--end::Col-->
               </div>
@@ -163,7 +169,7 @@ const activeKey = ref('1');
                 <!--end::Label-->
                 <!--begin::Col-->
                 <div class="col-lg-8">
-                  <span class="fw-semibold" style="color: #504b4b">01923456789</span>
+                  <span class="fw-semibold" style="color: #504b4b">{{ user.mobile }}</span>
                 </div>
                 <!--end::Col-->
               </div>
@@ -176,7 +182,7 @@ const activeKey = ref('1');
                 <!--end::Label-->
                 <!--begin::Col-->
                 <div class="col-lg-8">
-                  <span class="fw-semibold" style="color: #504b4b">Admin</span>
+                  <span class="fw-semibold" style="color: #504b4b">{{ user.Role.name }}</span>
                 </div>
                 <!--end::Col-->
               </div>

@@ -46,7 +46,8 @@ async function authMiddleware(req, res, next) {
                     else return res.status(403).json({error: "Not authenticated!", message: "Bearer token invalid"})
                 } else {
                     const user = await models.User.findOne({
-                        where: {id: decoded.sub}
+                        where: {id: decoded.sub},
+                        include: models.Role
                     })
                     if (user && user.id) {
                         req.user = user;

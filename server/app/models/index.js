@@ -18,6 +18,7 @@ const modelDefiners = [
     require('./role'),
     require('./user'),
     require('./login_info'),
+    require('./support_category'),
 ];
 
 // We define all models according to their files.

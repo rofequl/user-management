@@ -2,6 +2,7 @@ import {createStore} from 'vuex'
 import auth from "@/store/modules/Auth";
 import role from "@/store/modules/Role";
 import user from "@/store/modules/User";
+import support_category from "@/store/modules/SupportCategory";
 
 export default createStore({
   state: {
@@ -31,6 +32,7 @@ export default createStore({
   modules: {
     auth,
     role,
-    user
+    user,
+    support_category
   },
 })
