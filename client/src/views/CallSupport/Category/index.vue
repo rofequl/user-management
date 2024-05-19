@@ -4,7 +4,6 @@ import {computed, h, onMounted, ref} from "vue";
 import store from "@/store";
 import {EditOutlined, DeleteOutlined} from "@ant-design/icons-vue";
 import {notification} from "ant-design-vue";
-import router from "@/router";
 
 const categoryList = computed(() => store.getters.supportCategoryList)
 const tableLoad = ref(false)
