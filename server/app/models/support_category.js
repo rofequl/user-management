@@ -8,5 +8,5 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING,
             allowNull: false
         }
-    }, {sequelize, tableName: 'support_category', paranoid: true, timestamps: true})
+    }, {sequelize, tableName: 'support_categories', paranoid: true, timestamps: true})
 }

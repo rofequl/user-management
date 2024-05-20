@@ -1,4 +1,3 @@
-// New Role add method
 const {body, validationResult} = require("express-validator"),
     {models} = require("../../models"),
     log = require("../../../config/logging");

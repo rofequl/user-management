@@ -4,6 +4,7 @@ const AuthController = require('../app/controllers/Auth/AuthController')
 const UserController = require('../app/controllers/Auth/UserController')
 const RoleController = require('../app/controllers/Auth/RoleController')
 const CategoryController = require('../app/controllers/Support/CategoryController')
+const CallSupportController = require('../app/controllers/Support/CallSupportController')
 const {detectServer} = require("../app/middleware/DetectServer");
 const {authMiddleware, JWTRefresh} = require("../app/helper/auth/jwtUtils");
 
@@ -31,6 +32,12 @@ router.get("/support/category", authMiddleware, CategoryController.getCategory);
 router.post("/support/category", authMiddleware, CategoryController.addCategory);
 router.put("/support/category/:id", authMiddleware, CategoryController.updateCategory);
 router.delete("/support/category/:id", authMiddleware, CategoryController.deleteCategory);
+
+// Support Category
+router.get("/call-support", authMiddleware, CallSupportController.getSupport);
+router.post("/call-support", authMiddleware, CallSupportController.addSupport);
+router.put("/call-support/:id", authMiddleware, CallSupportController.updateSupport);
+router.delete("/call-support/:id", authMiddleware, CallSupportController.deleteSupport);
 
 
 module.exports = router;
