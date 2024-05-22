@@ -39,34 +39,34 @@ const routes = [
         ]
       },
       {
-        path: 'user/list',
-        name: 'All User',
-        component: () => import('@/views/Users/UserList.vue')
-      },
-      {
-        path: 'user/role',
-        name: 'User Permission',
-        component: () => import('@/views/Users/Role/Role.vue')
-      },
-      {
-        path: 'user/role/create',
-        name: 'New Role',
-        component: () => import('@/views/Users/Role/AddRole.vue')
-      },
-      {
-        path: 'user/:id/edit',
-        name: 'Edit Role',
-        component: () => import('@/views/Users/Role/EditRole.vue')
-      },
-      {
-        path: 'call/category',
-        name: 'Call Category',
-        component: () => import('@/views/CallSupport/Category/index.vue')
-      },
-      {
-        path: 'call/support',
+        path: 'help-desk',
         name: 'Call Support',
-        component: () => import('@/views/CallSupport/Support/index.vue')
+        component: () => import('@/views/HelpDesk/Support/index.vue')
+      },
+      {
+        path: 'staffs/list',
+        name: 'All Staffs',
+        component: () => import('@/views/Staffs/StaffList.vue')
+      },
+      {
+        path: 'staffs/role',
+        name: 'Staffs Permission',
+        component: () => import('@/views/Staffs/Role/Role.vue')
+      },
+      {
+        path: 'staffs/role/create',
+        name: 'New Role',
+        component: () => import('@/views/Staffs/Role/AddRole.vue')
+      },
+      {
+        path: 'staffs/:id/edit',
+        name: 'Edit Role',
+        component: () => import('@/views/Staffs/Role/EditRole.vue')
+      },
+      {
+        path: 'support-category',
+        name: 'Call Category',
+        component: () => import('@/views/Directory/SupportCategory/index.vue')
       },
       {
         path: "/404",

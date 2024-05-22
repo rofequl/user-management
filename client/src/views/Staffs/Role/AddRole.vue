@@ -1,5 +1,5 @@
 <script setup>
-import RoleAddEdit from "@/components/User/RoleAddEdit.vue";
+import RoleAddEdit from "@/components/Staffs/RoleAddEdit.vue";
 
 </script>
 <template>

@@ -9,10 +9,10 @@ module.exports = (sequelize) => {
     sequelize.models.User.belongsTo(sequelize.models.Role, {foreignKey: "roleId"});
 
     // Support Category and Call Support one-to-many relationship
-    sequelize.models.SupportCategory.hasMany(sequelize.models.CallSupport, {foreignKey: 'categoryId'});
-    sequelize.models.CallSupport.belongsTo(sequelize.models.SupportCategory, {foreignKey: "categoryId"});
+    sequelize.models.SupportCategory.hasMany(sequelize.models.HelpDesk, {foreignKey: 'categoryId'});
+    sequelize.models.HelpDesk.belongsTo(sequelize.models.SupportCategory, {foreignKey: "categoryId"});
 
     // User and Call Support one-to-many relationship
-    sequelize.models.User.hasMany(sequelize.models.CallSupport, {foreignKey: 'userId'});
-    sequelize.models.CallSupport.belongsTo(sequelize.models.User, {foreignKey: "userId"});
+    sequelize.models.User.hasMany(sequelize.models.HelpDesk, {foreignKey: 'userId'});
+    sequelize.models.HelpDesk.belongsTo(sequelize.models.User, {foreignKey: "userId"});
 }

@@ -10,7 +10,7 @@ exports.getSupport = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
         const offset = (page - 1) * limit;
-        const result = await models.CallSupport.findAndCountAll({
+        const result = await models.HelpDesk.findAndCountAll({
             offset: offset,
             limit: limit,
             order: [['id', 'DESC']],
@@ -34,7 +34,7 @@ exports.getSupport = async (req, res) => {
             totalItems: result.count
         });
     } catch (err) {
-        log.Error(err.message, 'CallSupportController', 'getSupport', err.errors, function () {
+        log.Error(err.message, 'HelpDeskController', 'getSupport', err.errors, function () {
             res.status(500).json({success: false, message: "Internal server error", error: err.message});
         });
     }
@@ -68,7 +68,7 @@ module.exports.addSupport = [
                 categoryId: req.body.categoryId,
                 userId: req.user.id,
             };
-            await models.CallSupport.create(support).then(result => {
+            await models.HelpDesk.create(support).then(result => {
                 res.status(200).json({
                     success: true,
                     message: 'Call Support Entry Successfully',
@@ -76,7 +76,7 @@ module.exports.addSupport = [
                 });
             })
         } catch (err) {
-            log.Error(err.message, 'CallSupportController', 'addSupport', err.errors, function () {
+            log.Error(err.message, 'HelpDeskController', 'addSupport', err.errors, function () {
                 res.status(500).json({success: false, message: "Internal server error", error: err.message});
             });
         }
@@ -102,7 +102,7 @@ module.exports.updateSupport = [
             if (!errors.isEmpty()) return res.status(422).json({success: false, errors: errors.mapped()});
 
             // Find the Support by ID
-            const supportCheck = await models.CallSupport.findByPk(id);
+            const supportCheck = await models.HelpDesk.findByPk(id);
             if (!supportCheck) return res.status(404).json({success: false, message: 'Support not found'});
 
             // initialize record
@@ -124,7 +124,7 @@ module.exports.updateSupport = [
                 });
             })
         } catch (err) {
-            log.Error(err.message, 'CallSupportController', 'updateSupport', err.errors, function () {
+            log.Error(err.message, 'HelpDeskController', 'updateSupport', err.errors, function () {
                 res.status(500).json({success: false, message: "Internal server error", error: err.message});
             });
         }
@@ -136,7 +136,7 @@ exports.deleteSupport = async (req, res) => {
     const {id} = req.params;
     try {
         // Soft delete
-        const deletedSupport = await models.CallSupport.destroy({where: {id: id}});
+        const deletedSupport = await models.HelpDesk.destroy({where: {id: id}});
         if (deletedSupport) {
             res.status(200).json({
                 success: true,
@@ -144,7 +144,7 @@ exports.deleteSupport = async (req, res) => {
             });
         } else return res.status(404).json({success: false, message: 'Call support not found'});
     } catch (err) {
-        log.Error(err.message, 'CallSupportController', 'deleteSupport', err.errors, function () {
+        log.Error(err.message, 'HelpDeskController', 'deleteSupport', err.errors, function () {
             res.status(500).json({success: false, message: "Internal server error", error: err.message});
         });
     }

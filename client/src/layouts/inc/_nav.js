@@ -6,39 +6,46 @@ export default [
     icon: 'cil-speedometer',
   },
   {
+    component: 'CNavItem',
+    name: 'Support & Training',
+    to: '/support-training',
+    icon: 'cil-life-ring',
+  },
+  {
+    component: 'CNavItem',
+    name: 'Help Desk',
+    to: '/help-desk',
+    icon: 'cil-headphones',
+  },
+  {
     component: 'CNavGroup',
-    name: 'Manage User',
-    to: '/user',
+    name: 'Staffs',
+    to: '/staffs',
     icon: 'cil-user',
     items: [
       {
         component: 'CNavItem',
-        name: 'All User',
-        to: '/user/list'
+        name: 'All Staffs',
+        to: '/staffs/list'
       },
       {
         component: 'CNavItem',
-        name: 'User Permission',
-        to: '/user/role'
+        name: 'Staffs Permissions',
+        to: '/staffs/role'
       }
     ]
   },
   {
     component: 'CNavGroup',
-    name: 'Call Support',
-    to: '/call',
-    icon: 'cil-user',
+    name: 'Site Directory',
+    to: '/',
+    icon: 'cil-puzzle',
     items: [
       {
         component: 'CNavItem',
-        name: 'Call Support Category',
-        to: '/call/category'
+        name: 'Support Category',
+        to: '/support-category'
       },
-      {
-        component: 'CNavItem',
-        name: 'Call Support Manage',
-        to: '/call/support'
-      }
     ]
   }
 ]

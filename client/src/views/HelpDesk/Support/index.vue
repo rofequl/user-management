@@ -1,5 +1,5 @@
 <script setup>
-import SupportAddEdit from "@/components/CallSupport/SupportAddEdit.vue";
+import SupportAddEdit from "@/components/HelpDesk/SupportAddEdit.vue";
 import apiService from "@/core/services/api.service";
 import {usePagination} from "vue-request";
 import {computed, h} from "vue";
@@ -98,7 +98,7 @@ const updateTable = () => {
 <template>
   <div>
     <!-- Start Page Header -->
-    <a-page-header title="Call Support" class="p-0 mb-2">
+    <a-page-header title="Help Desk" class="p-0 mb-2">
       <template #extra>
         <a-button type="primary" @click="$refs.childRef.modal()">New Support</a-button>
       </template>
@@ -107,7 +107,7 @@ const updateTable = () => {
           <a-breadcrumb-item>
             <router-link to="/">Home</router-link>
           </a-breadcrumb-item>
-          <a-breadcrumb-item>Call Support</a-breadcrumb-item>
+          <a-breadcrumb-item>Help Desk</a-breadcrumb-item>
         </a-breadcrumb>
       </template>
     </a-page-header>

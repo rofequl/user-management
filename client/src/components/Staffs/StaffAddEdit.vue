@@ -131,7 +131,7 @@ defineExpose({
 </script>
 <template>
   <div>
-    <a-modal v-model:open="visible" :title="modalAdd? 'Create a new user':'Edit this user'"
+    <a-modal v-model:open="visible" :title="modalAdd? 'Create a new staff':'Edit this staff'"
              :ok-text="modalAdd? 'Create':'Update'"
              cancel-text="Cancel" autocomplete="off" @ok="modalAdd? onSubmit(): onUpdate()">
       <a-form ref="formRef" :model="formState" autocomplete="off" :rules="rules">

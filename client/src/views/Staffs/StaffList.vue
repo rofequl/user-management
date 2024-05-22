@@ -1,10 +1,9 @@
 <!--suppress JSCheckFunctionSignatures -->
 <script setup>
-import {CCol, CRow} from "@coreui/vue";
 import apiService from "@/core/services/api.service";
 import {usePagination} from "vue-request";
 import {computed, h} from "vue";
-import UserAddEdit from "@/components/User/UserAddEdit.vue";
+import StaffAddEdit from "@/components/Staffs/StaffAddEdit.vue";
 import {format} from 'date-fns';
 import {EditOutlined, EyeOutlined} from "@ant-design/icons-vue";
 
@@ -26,7 +25,7 @@ const pagination = computed(() => ({
 
 const columns = [
   {
-    title: 'User Info',
+    title: 'Staff Info',
     dataIndex: 'user_info',
     key: 'user_info',
   },
@@ -84,21 +83,20 @@ const updateTable = () => {
 </script>
 <template>
   <div>
-    <!-- Page Header -->
-    <CRow class="mb-4">
-      <CCol sm="6" xs="6">
-        <span class="text-uppercase page-subtitle fs-6">Manage User</span>
-        <a-breadcrumb>
+    <!-- Start Page Header -->
+    <a-page-header title="All Staffs" class="p-0 mb-2">
+      <template #extra>
+        <a-button type="primary" @click="$refs.childRef.modal()">New Staff Add</a-button>
+      </template>
+      <template #breadcrumb>
+        <a-breadcrumb class="fs-7">
           <a-breadcrumb-item>
             <router-link to="/">Home</router-link>
           </a-breadcrumb-item>
-          <a-breadcrumb-item>All User List</a-breadcrumb-item>
+          <a-breadcrumb-item>All Staffs</a-breadcrumb-item>
         </a-breadcrumb>
-      </CCol>
-      <CCol sm="6" xs="6" class="d-flex justify-content-end align-items-center">
-        <a-button type="primary" @click="$refs.childRef.modal()">New User Add</a-button>
-      </CCol>
-    </CRow>
+      </template>
+    </a-page-header>
     <!-- End Page Header -->
     <!-- Datatable -->
     <a-card :bordered="false" :bodyStyle="{padding: 0}">
@@ -137,6 +135,6 @@ const updateTable = () => {
       </div>
     </a-card>
     <!-- End Datatable -->
-    <UserAddEdit ref="childRef" @update="updateTable"/>
+    <StaffAddEdit ref="childRef" @update="updateTable"/>
   </div>
 </template>

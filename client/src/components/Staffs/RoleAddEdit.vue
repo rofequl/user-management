@@ -108,22 +108,20 @@ const requestFailed = (err) => {
 </script>
 <template>
   <div>
-    <!-- Page Header -->
-    <CRow>
-      <CCol sm="6" xs="12" class="mb-4">
-        <span class="text-uppercase page-subtitle fs-6">User Permission</span>
-        <a-breadcrumb>
+    <!-- Start Page Header -->
+    <a-page-header title="Add new role" class="p-0 mb-2">
+      <template #breadcrumb>
+        <a-breadcrumb class="fs-7">
           <a-breadcrumb-item>
             <router-link to="/">Home</router-link>
           </a-breadcrumb-item>
           <a-breadcrumb-item>
-            <router-link to="/user/role">User Permission</router-link>
+            <router-link :to="{name: 'Staffs Permission'}">All Role List</router-link>
           </a-breadcrumb-item>
-          <a-breadcrumb-item v-if="isEdit">Edit role</a-breadcrumb-item>
-          <a-breadcrumb-item v-else>Add new role</a-breadcrumb-item>
+          <a-breadcrumb-item>Add new role</a-breadcrumb-item>
         </a-breadcrumb>
-      </CCol>
-    </CRow>
+      </template>
+    </a-page-header>
     <!-- End Page Header -->
     <a-card :title="isEdit? 'Edit Role':'Create New Role'" :bordered="false" :loading="cardLoading">
       <a-form ref="formRef" :model="formState" autocomplete="off" @finish="isEdit? onUpdate(): onSubmit()"
@@ -144,7 +142,9 @@ const requestFailed = (err) => {
         </a-card>
         <a-row class="mt-4">
           <a-col :span="24" class="d-flex gap-2 justify-content-end">
-            <router-link to="/user/role"><a-button>Cancel</a-button></router-link>
+            <router-link :to="{name: 'Staffs Permission'}">
+              <a-button>Cancel</a-button>
+            </router-link>
             <a-button type="primary" html-type="submit" :loading="submitBtn" :disabled="submitBtn" v-if="isEdit">
               Update
             </a-button>

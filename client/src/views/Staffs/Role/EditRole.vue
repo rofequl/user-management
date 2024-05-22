@@ -1,5 +1,5 @@
 <script setup>
-import RoleAddEdit from "@/components/User/RoleAddEdit.vue";
+import RoleAddEdit from "@/components/Staffs/RoleAddEdit.vue";
 import {useRoute} from "vue-router";
 
 const route = useRoute();

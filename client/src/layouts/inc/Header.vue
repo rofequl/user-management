@@ -1,11 +1,10 @@
 <script setup>
 import {
   CHeader, CContainer, CHeaderToggler, CHeaderNav, CDropdown, CDropdownToggle, CDropdownMenu,
-  CDropdownDivider, CDropdownItem, CAvatar
+  CDropdownDivider, CDropdownItem, CAvatar, CNavLink, CNavItem
 } from "@coreui/vue";
 import {ref} from "vue";
 import store from "@/store";
-import avatar from '@/assets/images/avatars/8.jpg'
 
 const headerClassNames = ref('mb-4 p-0')
 </script>
@@ -16,7 +15,7 @@ const headerClassNames = ref('mb-4 p-0')
       <CHeaderToggler @click="store.commit('toggleSidebar')" style="margin-inline-start: -14px">
         <CIcon icon="cil-menu" size="lg"/>
       </CHeaderToggler>
-      <CHeaderNav>
+      <CHeaderNav class="ms-auto">
         <CDropdown placement="bottom-end" variant="nav-item">
           <CDropdownToggle class="py-0 pe-0" :caret="false">
             <CAvatar :src="store.getters.currentUser.profilePicture" size="md"/>

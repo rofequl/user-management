@@ -1,9 +1,9 @@
 const {DataTypes, Model} = require('sequelize');
 module.exports = (sequelize) => {
-    class CallSupport extends Model {
+    class HelpDesk extends Model {
     }
 
-    CallSupport.init({
+    HelpDesk.init({
         id: {
             type: DataTypes.BIGINT,
             autoIncrement: true,
@@ -35,5 +35,5 @@ module.exports = (sequelize) => {
             type: DataTypes.TEXT
         }
 
-    }, {sequelize, tableName: 'call_supports', paranoid: true, timestamps: true})
+    }, {sequelize, tableName: 'help_desks', paranoid: true, timestamps: true})
 }

@@ -1,22 +1,21 @@
 <script setup>
-import {CRow, CCol} from "@coreui/vue";
-import {computed, h, onMounted, ref} from 'vue';
+import CategoryAddEdit from "@/components/Directory/CategoryAddEdit.vue";
+import {computed, h, onMounted, ref} from "vue";
 import store from "@/store";
 import {EditOutlined, DeleteOutlined} from "@ant-design/icons-vue";
 import {notification} from "ant-design-vue";
-import router from "@/router";
 
-const roleList = computed(() => store.getters.roleList)
+const categoryList = computed(() => store.getters.supportCategoryList)
 const tableLoad = ref(false)
 onMounted(async () => {
   tableLoad.value = true
-  if (!roleList.value.length > 0) await store.dispatch('ROLE_LIST')
+  if (!categoryList.value.length > 0) await store.dispatch('SUPPORT_CATEGORY_LIST')
   tableLoad.value = false
 });
 
 const columns = [
   {
-    title: 'Name',
+    title: 'Support Category Name',
     dataIndex: 'name',
     key: 'name',
   },
@@ -28,7 +27,7 @@ const columns = [
 ]
 
 const onDelete = key => {
-  store.dispatch('ROLE_DELETE', key).then(res => {
+  store.dispatch('SUPPORT_CATEGORY_DELETE', key).then(res => {
     notification.success({
       message: 'Congratulations',
       description: (res.data || {}).message || 'Request Successfully Done',
@@ -42,46 +41,39 @@ const onDelete = key => {
     });
 };
 
-const onEdit = id => {
-  router.push({name: 'Edit Role', params: {id}})
-}
-
 </script>
 <template>
   <div>
-    <!-- Page Header -->
-    <CRow class="mb-4">
-      <CCol sm="6" xs="6">
-        <span class="text-uppercase page-subtitle fs-6">Manage User</span>
-        <a-breadcrumb>
+    <!-- Start Page Header -->
+    <a-page-header title="Support Category" class="p-0 mb-2">
+      <template #extra>
+        <a-button type="primary" @click="$refs.childRef.showModal()">New Category</a-button>
+      </template>
+      <template #breadcrumb>
+        <a-breadcrumb class="fs-7">
           <a-breadcrumb-item>
             <router-link to="/">Home</router-link>
           </a-breadcrumb-item>
-          <a-breadcrumb-item>All Role List</a-breadcrumb-item>
+          <a-breadcrumb-item>Support Category</a-breadcrumb-item>
         </a-breadcrumb>
-      </CCol>
-      <CCol sm="6" xs="6" class="d-flex justify-content-end align-items-center">
-        <router-link to="/user/role/create">
-          <a-button type="primary">Add New Role</a-button>
-        </router-link>
-      </CCol>
-    </CRow>
+      </template>
+    </a-page-header>
     <!-- End Page Header -->
     <!-- Datatable -->
     <a-card :bordered="false" :bodyStyle="{padding: 0}">
-      <a-table :dataSource="roleList" :columns="columns" :loading="tableLoad">
+      <a-table :dataSource="categoryList" :columns="columns" :loading="tableLoad" size="small">
         <template #bodyCell="{ column, record }">
           <template v-if="column.dataIndex === 'action'">
             <a-button-group>
-              <a-tooltip placement="topLeft" title="Edit Role">
-                <a-button :icon="h(EditOutlined)" @click="onEdit(record.id)"/>
+              <a-tooltip placement="topLeft" title="Edit Category">
+                <a-button :icon="h(EditOutlined)" @click="$refs.childRef.showModal(record)"/>
               </a-tooltip>
               <a-popconfirm placement="topRight"
-                            title="Are you sure delete this role?"
+                            title="Are you sure delete this Category?"
                             ok-text="Yes"
                             cancel-text="No"
                             @confirm="onDelete(record.id)">
-                <a-tooltip placement="bottomLeft" title="Delete Role">
+                <a-tooltip placement="bottomLeft" title="Delete Category">
                   <a-button :icon="h(DeleteOutlined)"/>
                 </a-tooltip>
               </a-popconfirm>
@@ -91,5 +83,6 @@ const onEdit = id => {
       </a-table>
     </a-card>
     <!-- End Datatable -->
+    <CategoryAddEdit ref="childRef"/>
   </div>
 </template>
