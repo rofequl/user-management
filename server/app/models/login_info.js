@@ -5,6 +5,11 @@ module.exports = (sequelize) => {
     }
 
     LoginInfo.init({
+        id: {
+            type: DataTypes.BIGINT,
+            autoIncrement: true,
+            primaryKey: true,
+        },
         userId: {
             type: DataTypes.INTEGER,
             allowNull: false,

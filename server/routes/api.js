@@ -33,11 +33,12 @@ router.post("/support/category", authMiddleware, CategoryController.addCategory)
 router.put("/support/category/:id", authMiddleware, CategoryController.updateCategory);
 router.delete("/support/category/:id", authMiddleware, CategoryController.deleteCategory);
 
-// Support Category
+// Call Support
 router.get("/call-support", authMiddleware, CallSupportController.getSupport);
 router.post("/call-support", authMiddleware, CallSupportController.addSupport);
 router.put("/call-support/:id", authMiddleware, CallSupportController.updateSupport);
 router.delete("/call-support/:id", authMiddleware, CallSupportController.deleteSupport);
+
 
 
 module.exports = router;

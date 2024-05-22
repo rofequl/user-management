@@ -7,4 +7,12 @@ module.exports = (sequelize) => {
     // Role and User Assuming a one-to-many relationship
     sequelize.models.Role.hasMany(sequelize.models.User, {foreignKey: 'roleId'});
     sequelize.models.User.belongsTo(sequelize.models.Role, {foreignKey: "roleId"});
+
+    // Support Category and Call Support one-to-many relationship
+    sequelize.models.SupportCategory.hasMany(sequelize.models.CallSupport, {foreignKey: 'categoryId'});
+    sequelize.models.CallSupport.belongsTo(sequelize.models.SupportCategory, {foreignKey: "categoryId"});
+
+    // User and Call Support one-to-many relationship
+    sequelize.models.User.hasMany(sequelize.models.CallSupport, {foreignKey: 'userId'});
+    sequelize.models.CallSupport.belongsTo(sequelize.models.User, {foreignKey: "userId"});
 }

@@ -10,7 +10,10 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
         acquire: dbConfig.pool.acquire,
         idle: dbConfig.pool.idle
     },
-    operatorsAliases: 0
+    operatorsAliases: 0,
+    supportBigNumbers: true,
+    bigNumberStrings: true,
+    timezone: '+06:00',
 });
 
 const modelDefiners = [
@@ -19,6 +22,7 @@ const modelDefiners = [
     require('./user'),
     require('./login_info'),
     require('./support_category'),
+    require('./call_support'),
 ];
 
 // We define all models according to their files.

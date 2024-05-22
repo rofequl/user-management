@@ -4,6 +4,11 @@ module.exports = (sequelize) => {
     }
 
     CallSupport.init({
+        id: {
+            type: DataTypes.BIGINT,
+            autoIncrement: true,
+            primaryKey: true,
+        },
         callingTime: {
             type: DataTypes.DATE,
             allowNull: false,
