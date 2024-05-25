@@ -39,9 +39,14 @@ const routes = [
         ]
       },
       {
+        path: 'support-manager',
+        name: 'Support Manager',
+        component: () => import('@/views/Addon/Support/index.vue')
+      },
+      {
         path: 'help-desk',
         name: 'Call Support',
-        component: () => import('@/views/HelpDesk/Support/index.vue')
+        component: () => import('@/views/Addon/HelpDesk/index.vue')
       },
       {
         path: 'staffs/list',

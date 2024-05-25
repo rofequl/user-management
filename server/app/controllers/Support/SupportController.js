@@ -2,14 +2,14 @@ const {body, validationResult} = require("express-validator");
 const {models} = require("../../models");
 const log = require("../../../config/logging");
 
-// Call support list send by API
+// Support list send by API
 exports.getSupport = async (req, res) => {
     try {
-        // Call support list pagination set
+        // Support list pagination set
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
         const offset = (page - 1) * limit;
-        const result = await models.HelpDesk.findAndCountAll({
+        const result = await models.Support.findAndCountAll({
             offset: offset,
             limit: limit,
             order: [['id', 'DESC']],
@@ -33,7 +33,7 @@ exports.getSupport = async (req, res) => {
             totalItems: result.count
         });
     } catch (err) {
-        log.Error(err.message, 'HelpDeskController', 'getSupport', err.errors, function () {
+        log.Error(err.message, 'SupportController', 'getSupport', err.errors, function () {
             res.status(500).json({success: false, message: "Internal server error", error: err.message});
         });
     }
@@ -41,10 +41,15 @@ exports.getSupport = async (req, res) => {
 
 // Call support entry method
 module.exports.addSupport = [
-    body("callingTime", "Calling time is required!").notEmpty(),
-    body("customerNumber", "Customer number is required!").notEmpty(),
+    body("supportTime", "Support time is required!").notEmpty(),
+    body("type", "Support type is required!").notEmpty().matches(/^(Support|Training)$/)
+        .withMessage('Type must be either "Support" or "Training"'),
+    body("medium", "Support Medium is required!").notEmpty().matches(/^(Physical|Virtual)$/)
+        .withMessage('Medium must be either "Physical" or "Virtual"'),
+    body("office", "Office name is required!").notEmpty(),
     body("status", "Status is required!").notEmpty(),
-    body("problem", "Problem is required!").notEmpty(),
+    body("description", "Description is required!").notEmpty(),
+    body("requestedBy", "Requested By is required!").notEmpty(),
     body("categoryId", "Category id is required!").notEmpty()
         .custom(async (categoryId) => {
             const category = await models.SupportCategory.findByPk(categoryId);
@@ -58,24 +63,25 @@ module.exports.addSupport = [
 
             // initialize record
             const support = {
-                callingTime: req.body.callingTime,
-                customerNumber: req.body.customerNumber,
+                supportTime: req.body.supportTime,
+                type: req.body.type,
                 status: req.body.status,
-                problem: req.body.problem,
-                solution: req.body.solution,
-                note: req.body.note,
+                medium: req.body.medium,
+                office: req.body.office,
+                description: req.body.description,
+                requestedBy: req.body.requestedBy,
                 categoryId: req.body.categoryId,
                 userId: req.user.id,
             };
-            await models.HelpDesk.create(support).then(result => {
+            await models.Support.create(support).then(result => {
                 res.status(200).json({
                     success: true,
-                    message: 'Call Support Entry Successfully',
+                    message: 'Support Entry Successfully',
                     data: result,
                 });
             })
         } catch (err) {
-            log.Error(err.message, 'HelpDeskController', 'addSupport', err.errors, function () {
+            log.Error(err.message, 'SupportController', 'addSupport', err.errors, function () {
                 res.status(500).json({success: false, message: "Internal server error", error: err.message});
             });
         }
@@ -84,10 +90,15 @@ module.exports.addSupport = [
 
 // Update call support method
 module.exports.updateSupport = [
-    body("callingTime", "Calling time is required!").notEmpty(),
-    body("customerNumber", "Customer number is required!").notEmpty(),
+    body("supportTime", "Support time is required!").notEmpty(),
+    body("type", "Support type is required!").notEmpty().matches(/^(Support|Training)$/)
+        .withMessage('Type must be either "Support" or "Training"'),
+    body("medium", "Support Medium is required!").notEmpty().matches(/^(Physical|Virtual)$/)
+        .withMessage('Medium must be either "Physical" or "Virtual"'),
+    body("office", "Office name is required!").notEmpty(),
     body("status", "Status is required!").notEmpty(),
-    body("problem", "Problem is required!").notEmpty(),
+    body("description", "Description is required!").notEmpty(),
+    body("requestedBy", "Requested By is required!").notEmpty(),
     body("categoryId", "Category id is required!").notEmpty()
         .custom(async (categoryId) => {
             const category = await models.SupportCategory.findByPk(categoryId);
@@ -101,49 +112,50 @@ module.exports.updateSupport = [
             if (!errors.isEmpty()) return res.status(422).json({success: false, errors: errors.mapped()});
 
             // Find the Support by ID
-            const supportCheck = await models.HelpDesk.findByPk(id);
+            const supportCheck = await models.Support.findByPk(id);
             if (!supportCheck) return res.status(404).json({success: false, message: 'Support not found'});
 
             // initialize record
             const support = {
-                callingTime: req.body.callingTime,
-                customerNumber: req.body.customerNumber,
+                supportTime: req.body.supportTime,
+                type: req.body.type,
                 status: req.body.status,
-                problem: req.body.problem,
-                solution: req.body.solution,
-                note: req.body.note,
+                medium: req.body.medium,
+                office: req.body.office,
+                description: req.body.description,
+                requestedBy: req.body.requestedBy,
                 categoryId: req.body.categoryId,
                 userId: req.user.id,
             };
             await supportCheck.update(support).then(result => {
                 res.status(200).json({
                     success: true,
-                    message: 'Call Support Update Successfully',
+                    message: 'Support Update Successfully',
                     data: result,
                 });
             })
         } catch (err) {
-            log.Error(err.message, 'HelpDeskController', 'updateSupport', err.errors, function () {
+            log.Error(err.message, 'SupportController', 'updateSupport', err.errors, function () {
                 res.status(500).json({success: false, message: "Internal server error", error: err.message});
             });
         }
     }
 ]
 
-// Call Support Delete API
+// Support Delete API
 exports.deleteSupport = async (req, res) => {
     const {id} = req.params;
     try {
         // Soft delete
-        const deletedSupport = await models.HelpDesk.destroy({where: {id: id}});
+        const deletedSupport = await models.Support.destroy({where: {id: id}});
         if (deletedSupport) {
             res.status(200).json({
                 success: true,
-                message: 'Call support deleted successfully'
+                message: 'Support deleted successfully'
             });
-        } else return res.status(404).json({success: false, message: 'Call support not found'});
+        } else return res.status(404).json({success: false, message: 'Support not found'});
     } catch (err) {
-        log.Error(err.message, 'HelpDeskController', 'deleteSupport', err.errors, function () {
+        log.Error(err.message, 'SupportController', 'deleteSupport', err.errors, function () {
             res.status(500).json({success: false, message: "Internal server error", error: err.message});
         });
     }

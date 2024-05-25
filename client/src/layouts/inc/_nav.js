@@ -8,7 +8,7 @@ export default [
   {
     component: 'CNavItem',
     name: 'Support & Training',
-    to: '/support-training',
+    to: '/support-manager',
     icon: 'cil-life-ring',
   },
   {

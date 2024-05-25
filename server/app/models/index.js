@@ -23,6 +23,7 @@ const modelDefiners = [
     require('./login_info'),
     require('./support_category'),
     require('./help_desk'),
+    require('./support'),
 ];
 
 // We define all models according to their files.

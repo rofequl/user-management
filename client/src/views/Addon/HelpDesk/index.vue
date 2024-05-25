@@ -1,5 +1,5 @@
 <script setup>
-import SupportAddEdit from "@/components/HelpDesk/SupportAddEdit.vue";
+import SupportAddEdit from "@/components/Addon/HelpDesk/SupportAddEdit.vue";
 import apiService from "@/core/services/api.service";
 import {usePagination} from "vue-request";
 import {computed, h} from "vue";

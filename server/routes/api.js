@@ -5,6 +5,7 @@ const UserController = require('../app/controllers/Auth/UserController')
 const RoleController = require('../app/controllers/Auth/RoleController')
 const CategoryController = require('../app/controllers/Support/CategoryController')
 const HelpDeskController = require('../app/controllers/Support/HelpDeskController')
+const SupportController = require('../app/controllers/Support/SupportController')
 const {detectServer} = require("../app/middleware/DetectServer");
 const {authMiddleware, JWTRefresh} = require("../app/helper/auth/jwtUtils");
 
@@ -39,6 +40,11 @@ router.post("/call-support", authMiddleware, HelpDeskController.addSupport);
 router.put("/call-support/:id", authMiddleware, HelpDeskController.updateSupport);
 router.delete("/call-support/:id", authMiddleware, HelpDeskController.deleteSupport);
 
+// Support Manager
+router.get("/support", authMiddleware, SupportController.getSupport);
+router.post("/support", authMiddleware, SupportController.addSupport);
+router.put("/support/:id", authMiddleware, SupportController.updateSupport);
+router.delete("/support/:id", authMiddleware, SupportController.deleteSupport);
 
 
 module.exports = router;
