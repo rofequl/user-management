@@ -1,6 +1,7 @@
 const {body, validationResult} = require("express-validator");
 const {models} = require("../../models");
 const log = require("../../../config/logging");
+const {generateTrackingId} = require("../../helper/helper");
 
 // Support list send by API
 exports.getSupport = async (req, res) => {
@@ -61,6 +62,11 @@ module.exports.addSupport = [
             const errors = validationResult(req);
             if (!errors.isEmpty()) return res.status(422).json({success: false, errors: errors.mapped()});
 
+            const lastOrder = await models.Support.findOne({
+                order: [['id', 'DESC']]
+            });
+            const lastInsertId = lastOrder ? lastOrder.id + 1 : 1;
+
             // initialize record
             const support = {
                 supportTime: req.body.supportTime,
@@ -72,6 +78,7 @@ module.exports.addSupport = [
                 requestedBy: req.body.requestedBy,
                 categoryId: req.body.categoryId,
                 userId: req.user.id,
+                trackingId: generateTrackingId(lastInsertId, 'HD-')
             };
             await models.Support.create(support).then(result => {
                 res.status(200).json({
@@ -142,7 +149,13 @@ module.exports.updateSupport = [
     }
 ]
 
-// Support Delete API
+/**
+ * Deletes a support entry from the database.
+ *
+ * @return {Promise<void>} - A promise that resolves when the support entry is successfully deleted.
+ *                           If the support entry is not found, it returns a 404 status with a message.
+ *                           If there is an error, it returns a 500 status with an error message.
+ */
 exports.deleteSupport = async (req, res) => {
     const {id} = req.params;
     try {

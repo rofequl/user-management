@@ -1,4 +1,5 @@
 const {DataTypes, Model} = require('sequelize');
+const {generateTrackingId} = require("../helper/helper");
 module.exports = (sequelize) => {
     class Support extends Model {
     }
@@ -44,7 +45,17 @@ module.exports = (sequelize) => {
         },
         requestedBy: {
             type: DataTypes.TEXT
+        },
+        trackingId: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true,
+            validate: {
+                notNull: true
+            }
         }
 
-    }, {sequelize, tableName: 'support', paranoid: true, timestamps: true})
+    }, {
+        sequelize, tableName: 'support', paranoid: true, timestamps: true,
+    })
 }

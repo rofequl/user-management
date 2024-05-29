@@ -1,5 +1,13 @@
 <template>
-  <router-view/>
+  <a-config-provider
+    :theme="{
+      token: {
+        fontFamily: 'Poppins, sans-serif',
+      },
+    }"
+  >
+    <router-view/>
+  </a-config-provider>
 </template>
 <script setup>
 import {onBeforeMount, onBeforeUnmount, onMounted} from 'vue'

@@ -39,7 +39,7 @@ const routes = [
         ]
       },
       {
-        path: 'support-manager',
+        path: 'support-manager/:slug?',
         name: 'Support Manager',
         component: () => import('@/views/Addon/Support/index.vue')
       },

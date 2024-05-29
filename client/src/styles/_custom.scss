@@ -1,4 +1,21 @@
 // Here you can add other styles
+@import "@/assets/fonts/poppins/poppins.css";
+body {
+  font-family: Poppins, sans-serif!important;
+}
+
 .anticon svg {
-  vertical-align: unset!important;
+  vertical-align: unset !important;
+}
+
+.icon {
+  display: inline-block;
+  color: inherit;
+  text-align: center;
+  vertical-align: -0.095rem;
+  fill: currentcolor;
+}
+
+.cursor-pointer {
+  cursor: pointer !important;
 }

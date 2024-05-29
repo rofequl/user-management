@@ -2,13 +2,13 @@
 import SupportAddEdit from "@/components/Addon/Support/SupportAddEdit.vue";
 import apiService from "@/core/services/api.service";
 import {usePagination} from "vue-request";
-import {computed, h} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import {format} from "date-fns";
-import {EditOutlined, EyeOutlined, DeleteOutlined} from "@ant-design/icons-vue";
-import store from "@/store";
-import {notification} from "ant-design-vue";
+import SupportDetails from "@/components/Addon/Support/SupportDetails.vue";
+import router from "@/router";
+import {useRoute} from "vue-router";
 
-const getSupportList = params => apiService.get('call-support', {params})
+const getSupportList = params => apiService.get('support', {params})
 const {data, run, current, total, loading, pageSize} = usePagination(getSupportList, {
   pagination: {
     currentKey: 'page',
@@ -26,10 +26,10 @@ const pagination = computed(() => ({
 
 const columns = [
   {
-    title: 'Date & Time',
-    dataIndex: 'callingTime',
+    title: 'Tracking ID',
+    dataIndex: 'trackingId',
     align: 'center',
-    key: 'callingTime',
+    key: 'trackingId',
   },
   {
     title: 'Agent',
@@ -38,10 +38,28 @@ const columns = [
     key: 'userId',
   },
   {
-    title: 'Customer Number',
-    dataIndex: 'customerNumber',
+    title: 'Type',
+    dataIndex: 'type',
     align: 'center',
-    key: 'customerNumber',
+    key: 'type',
+  },
+  {
+    title: 'Medium',
+    dataIndex: 'medium',
+    align: 'center',
+    key: 'medium',
+  },
+  {
+    title: 'Office',
+    dataIndex: 'office',
+    align: 'center',
+    key: 'office',
+  },
+  {
+    title: 'Requested By',
+    dataIndex: 'requestedBy',
+    align: 'center',
+    key: 'requestedBy',
   },
   {
     title: 'Category',
@@ -50,22 +68,17 @@ const columns = [
     key: 'categoryId',
   },
   {
-    title: 'Problem',
-    dataIndex: 'problem',
-    align: 'center',
-    key: 'problem',
-  },
-  {
     title: 'Status',
     dataIndex: 'status',
     align: 'center',
     key: 'status',
   },
   {
-    title: 'Action',
-    dataIndex: 'action',
+    title: 'Date & Time',
+    dataIndex: 'supportTime',
     align: 'center',
-  }
+    key: 'supportTime',
+  },
 ]
 
 const handleTableChange = (pag) => {
@@ -75,21 +88,24 @@ const handleTableChange = (pag) => {
   });
 };
 
-const onDelete = key => {
-  store.dispatch('CALL_SUPPORT_DELETE', key).then(res => {
-    run()
-    notification.success({
-      message: 'Congratulations',
-      description: (res.data || {}).message || 'Request Successfully Done',
-    });
-  })
-    .catch(e => {
-      notification.error({
-        message: e.message,
-        description: ((e.response || {}).data || {}).message || 'Something Wrong',
-      });
-    });
-};
+const onRowClick = (record) => {
+  return {
+    onClick: () => {
+      const trackingId = record.trackingId;
+      router.push({name: 'Support Manager', params: {'slug': trackingId}})
+    },
+  }
+}
+const route = useRoute();
+const supportDetailsRef = ref(null);
+watch(() => route.params.slug, (newVal) => {
+    if (newVal && supportDetailsRef.value) supportDetailsRef.value.modal(newVal)
+  }, {immediate: true}
+);
+onMounted(() => {
+  let trackingId = route.params.slug
+  if (trackingId && supportDetailsRef.value) supportDetailsRef.value.modal(trackingId)
+})
 
 const updateTable = () => {
   run()
@@ -117,11 +133,11 @@ const updateTable = () => {
     <a-card :bordered="false" :bodyStyle="{padding: 0}">
       <div class="table-responsive">
         <a-table :dataSource="dataSource" :columns="columns" :loading="loading" :pagination="pagination"
-                 @change="handleTableChange" size="small">
+                 @change="handleTableChange" size="small" rowClassName="cursor-pointer" :customRow="onRowClick">
           <template #bodyCell="{ column, record }">
-            <template v-if="column.dataIndex === 'callingTime'">
-              {{ format(record.callingTime, 'dd MMM, yyyy') }}<br>
-              {{ format(record.callingTime, 'h:mm:ss a') }}
+            <template v-if="column.dataIndex === 'supportTime'">
+              {{ format(record.supportTime, 'dd MMM, yyyy') }} at
+              {{ format(record.supportTime, 'h:mm a') }}
             </template>
             <template v-if="column.dataIndex === 'userId'">
               {{ record.User.name }}
@@ -129,30 +145,12 @@ const updateTable = () => {
             <template v-if="column.dataIndex === 'categoryId'">
               {{ record.SupportCategory.name }}
             </template>
-            <template v-if="column.dataIndex === 'action'">
-              <a-button-group>
-                <a-tooltip placement="bottomLeft" title="Support Details">
-                  <a-button :icon="h(EyeOutlined)"/>
-                </a-tooltip>
-                <a-tooltip placement="topLeft" title="Edit Support" @click="$refs.childRef.modal(record)">
-                  <a-button :icon="h(EditOutlined)"/>
-                </a-tooltip>
-                <a-popconfirm placement="topRight"
-                              title="Are you sure delete this Support?"
-                              ok-text="Yes"
-                              cancel-text="No"
-                              @confirm="onDelete(record.id)">
-                  <a-tooltip placement="bottomLeft" title="Delete Support">
-                    <a-button :icon="h(DeleteOutlined)"/>
-                  </a-tooltip>
-                </a-popconfirm>
-              </a-button-group>
-            </template>
           </template>
         </a-table>
       </div>
     </a-card>
     <!-- End Datatable -->
     <SupportAddEdit ref="childRef" @update="updateTable"/>
+    <support-details ref="supportDetailsRef"/>
   </div>
 </template>

@@ -13,7 +13,7 @@ onMounted(async () => {
 //  <--- Variable ---> //
 // Data value declaration::::
 const formRef = ref();
-const visible = ref(true);
+const visible = ref(false);
 const createdModal = ref(true);
 const confirmLoading = ref(false);
 const formState = reactive({
@@ -62,12 +62,12 @@ const emit = defineEmits(['update']);
 const onSubmit = () => {
   confirmLoading.value = true;
   formRef.value.validateFields().then(values => {
-    store.dispatch('CALL_SUPPORT_ENTRY', values)
+    store.dispatch('SUPPORT_ENTRY', values)
       .then(() => {
         emit('update')
         notification.success({
           message: 'Congratulations',
-          description: 'New call support entry successfully',
+          description: 'New support entry successfully',
         });
       })
       .catch(err => requestFailed(err))
@@ -83,12 +83,12 @@ const onSubmit = () => {
 const onUpdate = () => {
   confirmLoading.value = true;
   formRef.value.validateFields().then(values => {
-    store.dispatch('CALL_SUPPORT_UPDATE', {id: formState.id, data: values})
+    store.dispatch('SUPPORT_UPDATE', {id: formState.id, data: values})
       .then(() => {
         emit('update')
         notification.success({
           message: 'Congratulations',
-          description: 'New call support updated successfully',
+          description: 'Support updated successfully',
         });
       })
       .catch(err => requestFailed(err))
@@ -101,12 +101,17 @@ const onUpdate = () => {
 
 // Form submit error notify::::
 const requestFailed = (err) => {
-  console.log(err)
+  const errorResponse = err.response?.data?.errors || {};
+  if (!errorResponse) {
+    console.error('Unexpected error response format:', errorResponse);
+    return;
+  }
+  const errorMessages = Object.values(errorResponse).map((error) => error.msg || 'An error occurred.');
   notification.error({
     message: err.message,
-    description: ((err.response || {}).data || {}).message || ((err.response || {}).data || {}).errors.email.msg,
+    description: errorMessages.join('\n'),
   });
-}
+};
 
 // Parent component model pen action
 const modal = (e) => {
@@ -130,7 +135,7 @@ const modal = (e) => {
     formState.status = e.status
     formState.medium = e.medium
     formState.office = e.office
-    
+
     formState.description = e.description
     formState.requestedBy = e.requestedBy
   }

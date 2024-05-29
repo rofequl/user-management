@@ -4,6 +4,7 @@ import role from "@/store/modules/Role";
 import user from "@/store/modules/User";
 import call_support from "@/store/modules/CallSupport";
 import support_category from "@/store/modules/SupportCategory";
+import support from "@/store/modules/Support";
 
 export default createStore({
   state: {
@@ -36,5 +37,6 @@ export default createStore({
     user,
     support_category,
     call_support,
+    support,
   },
 })

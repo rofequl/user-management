@@ -14,6 +14,7 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
     supportBigNumbers: true,
     bigNumberStrings: true,
     timezone: '+06:00',
+    logging: false
 });
 
 const modelDefiners = [

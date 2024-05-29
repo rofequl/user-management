@@ -58,11 +58,17 @@ const onUpdate = () => {
 
 // Form submit error notify::::
 const requestFailed = (err) => {
+  const errorResponse = err.response?.data?.errors || {};
+  if (!errorResponse) {
+    console.error('Unexpected error response format:', errorResponse);
+    return;
+  }
+  const errorMessages = Object.values(errorResponse).map((error) => error.msg || 'An error occurred.');
   notification.error({
     message: err.message,
-    description: ((err.response || {}).data || {}).message || ((err.response || {}).data || {}).errors.email.msg,
+    description: errorMessages.join('\n'),
   });
-}
+};
 
 // Parent component model pen action
 const showModal = (e) => {
