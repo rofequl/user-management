@@ -23,4 +23,18 @@ module.exports = (sequelize) => {
     // User and Support one-to-many relationship
     sequelize.models.User.hasMany(sequelize.models.Support, {foreignKey: 'userId'});
     sequelize.models.Support.belongsTo(sequelize.models.User, {foreignKey: "userId"});
+
+    // Set up associations for AttachmentUpload
+    sequelize.models.Support.hasMany(sequelize.models.AttachmentUpload, {
+        foreignKey: 'modelId',
+        constraints: false,
+        scope: {
+            modelName: 'Support',
+        },
+    });
+    sequelize.models.AttachmentUpload.belongsTo(sequelize.models.Support, {foreignKey: 'modelId', constraints: false});
+
+    // User and AttachmentUpload one-to-many relationship
+    sequelize.models.User.hasMany(sequelize.models.AttachmentUpload, {foreignKey: 'userId'});
+    sequelize.models.AttachmentUpload.belongsTo(sequelize.models.User, {foreignKey: "userId"});
 }

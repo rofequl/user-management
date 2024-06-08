@@ -25,6 +25,7 @@ const modelDefiners = [
     require('./support_category'),
     require('./help_desk'),
     require('./support'),
+    require('./attachments_upload'),
 ];
 
 // We define all models according to their files.

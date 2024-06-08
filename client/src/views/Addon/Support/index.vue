@@ -151,6 +151,6 @@ const updateTable = () => {
     </a-card>
     <!-- End Datatable -->
     <SupportAddEdit ref="childRef" @update="updateTable"/>
-    <support-details ref="supportDetailsRef"/>
+    <support-details ref="supportDetailsRef" @update="updateTable" @edit="e=>$refs.childRef.modal(e)"/>
   </div>
 </template>

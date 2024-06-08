@@ -8,6 +8,7 @@ const HelpDeskController = require('../app/controllers/Support/HelpDeskControlle
 const SupportController = require('../app/controllers/Support/SupportController')
 const {detectServer} = require("../app/middleware/DetectServer");
 const {authMiddleware, JWTRefresh} = require("../app/helper/auth/jwtUtils");
+const upload = require("../app/middleware/UploadMiddleware");
 
 // User Authentication Api
 router.get("/user/profile", authMiddleware, AuthController.profile);
@@ -42,9 +43,11 @@ router.delete("/call-support/:id", authMiddleware, HelpDeskController.deleteSupp
 
 // Support Manager
 router.get("/support", authMiddleware, SupportController.getSupport);
+router.get("/support/:id", authMiddleware, SupportController.getSupportDetails);
 router.post("/support", authMiddleware, SupportController.addSupport);
 router.put("/support/:id", authMiddleware, SupportController.updateSupport);
 router.delete("/support/:id", authMiddleware, SupportController.deleteSupport);
+router.post("/support/upload/:id", upload.single('file'), authMiddleware, SupportController.addFile);
 
 
 module.exports = router;

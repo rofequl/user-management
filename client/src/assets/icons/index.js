@@ -1,31 +1,4 @@
 import {
-  cibFacebook,
-  cibTwitter,
-  cibLinkedin,
-  cibFlickr,
-  cibTumblr,
-  cibXing,
-  cibGithub,
-  cibGoogle,
-  cibStackoverflow,
-  cibYoutube,
-  cibDribbble,
-  cibInstagram,
-  cibPinterest,
-  cibVk,
-  cibYahoo,
-  cibBehance,
-  cibReddit,
-  cibVimeo,
-  cibCcMastercard,
-  cibCcVisa,
-  cibCcStripe,
-  cibCcPaypal,
-  cibCcApplePay,
-  cibCcAmex,
-} from '@coreui/icons'
-import { cifUs, cifBr, cifIn, cifFr, cifEs, cifPl } from '@coreui/icons'
-import {
   cilArrowBottom,
   cilArrowRight,
   cilArrowTop,
@@ -82,7 +55,12 @@ import {
   cilHeadphones,
   cilLifeRing,
   cilScrubber,
-  cilFlagAlt
+  cilFlagAlt,
+  cilBarcode,
+  cilTag,
+  cilMap,
+  cilBuilding,
+  cilSmilePlus
 } from '@coreui/icons'
 
 export const iconsSet = Object.assign(
@@ -144,40 +122,11 @@ export const iconsSet = Object.assign(
     cilHeadphones,
     cilLifeRing,
     cilScrubber,
-    cilFlagAlt
-  },
-  {
-    cifUs,
-    cifBr,
-    cifIn,
-    cifFr,
-    cifEs,
-    cifPl,
-  },
-  {
-    cibFacebook,
-    cibTwitter,
-    cibLinkedin,
-    cibFlickr,
-    cibTumblr,
-    cibXing,
-    cibGithub,
-    cibGoogle,
-    cibStackoverflow,
-    cibYoutube,
-    cibDribbble,
-    cibInstagram,
-    cibPinterest,
-    cibVk,
-    cibYahoo,
-    cibBehance,
-    cibReddit,
-    cibVimeo,
-    cibCcMastercard,
-    cibCcVisa,
-    cibCcStripe,
-    cibCcPaypal,
-    cibCcApplePay,
-    cibCcAmex,
-  },
+    cilFlagAlt,
+    cilBarcode,
+    cilTag,
+    cilMap,
+    cilBuilding,
+    cilSmilePlus
+  }
 )

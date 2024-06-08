@@ -2,6 +2,8 @@ const {body, validationResult} = require("express-validator");
 const {models} = require("../../models");
 const log = require("../../../config/logging");
 const {generateTrackingId} = require("../../helper/helper");
+const fs = require('fs');
+const SaveFile = require('../../helper/saveFile');
 
 // Support list send by API
 exports.getSupport = async (req, res) => {
@@ -35,6 +37,35 @@ exports.getSupport = async (req, res) => {
         });
     } catch (err) {
         log.Error(err.message, 'SupportController', 'getSupport', err.errors, function () {
+            res.status(500).json({success: false, message: "Internal server error", error: err.message});
+        });
+    }
+}
+
+exports.getSupportDetails = async (req, res) => {
+    const {id} = req.params;
+    try {
+        const support = await models.Support.findOne({
+            where: {trackingId: id},
+            include: [
+                {
+                    model: models.SupportCategory,
+                    attributes: ['id', 'name']
+                },
+                {
+                    model: models.User,
+                    attributes: ['id', 'name']
+                }]
+        });
+        if (support) {
+            res.status(200).json({
+                success: true,
+                message: 'Support details found',
+                data: support,
+            });
+        } else return res.status(404).json({success: false, message: 'Support not found'});
+    } catch (err) {
+        log.Error(err.message, 'SupportController', 'getSupportDetails', err.errors, function () {
             res.status(500).json({success: false, message: "Internal server error", error: err.message});
         });
     }
@@ -134,11 +165,18 @@ module.exports.updateSupport = [
                 categoryId: req.body.categoryId,
                 userId: req.user.id,
             };
-            await supportCheck.update(support).then(result => {
+            await supportCheck.update(support).then(async (result) => {
+                const populatedSupport = await models.Support.findOne({
+                    where: {id: result.id},
+                    include: [
+                        {model: models.SupportCategory, attributes: ['id', 'name']},
+                        {model: models.User, attributes: ['id', 'name']}
+                    ]
+                });
                 res.status(200).json({
                     success: true,
                     message: 'Support Update Successfully',
-                    data: result,
+                    data: populatedSupport,
                 });
             })
         } catch (err) {
@@ -169,6 +207,52 @@ exports.deleteSupport = async (req, res) => {
         } else return res.status(404).json({success: false, message: 'Support not found'});
     } catch (err) {
         log.Error(err.message, 'SupportController', 'deleteSupport', err.errors, function () {
+            res.status(500).json({success: false, message: "Internal server error", error: err.message});
+        });
+    }
+}
+
+exports.addFile = async (req, res) => {
+    const {id} = req.params;
+
+    if (!req.file) {
+        return res.status(400).json({success: false, message: 'No file uploaded'});
+    }
+    try {
+        // Find the Support by ID
+        const supportCheck = await models.Support.findByPk(id);
+        if (!supportCheck) return res.status(404).json({success: false, message: 'Support not found'});
+
+        const {originalname, mimetype, buffer, size} = req.file;
+
+        // Validate file type (optional, adjust as needed)
+        const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+        if (!allowedTypes.includes(mimetype)) return res.status(400).json({
+            success: false,
+            message: 'Invalid file type'
+        });
+
+        const fileUpload = new SaveFile('support', originalname);
+        const fileName = await fileUpload.save(buffer);
+
+        const attachment = {
+            path: `upload/support/${fileName}`,
+            FileName: fileName,
+            FileType: mimetype,
+            FileSize: size,
+            modelName: 'Support',
+            modelId: id,
+            userId: req.user.id
+        };
+
+        await models.AttachmentUpload.create(attachment).then(result => {
+            res.status(200).json({
+                success: true,
+                message: 'File uploaded successfully!',
+            });
+        })
+    } catch (err) {
+        log.Error(err.message, 'SupportController', 'addFile', err.errors, function () {
             res.status(500).json({success: false, message: "Internal server error", error: err.message});
         });
     }
