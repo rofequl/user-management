@@ -19,3 +19,24 @@ body {
 .cursor-pointer {
   cursor: pointer !important;
 }
+
+
+/* WebKit browsers (Chrome, Safari) */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  border-radius: 8px;
+  background-color: #f3f3f3;
+  border: 1px solid #dcdbdb;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background-color: #dad0d0;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #c7b8b8;
+}

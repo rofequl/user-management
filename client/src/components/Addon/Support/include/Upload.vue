@@ -1,10 +1,18 @@
 <script setup>
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import {message} from 'ant-design-vue';
+import {api_base_url} from "@/core/config/app";
 
 //  <--- Variable ---> //
 // Data value declaration::::
+const props = defineProps({
+  uploadUrl: {
+    type: String
+  }
+})
 const fileList = ref([]);
+const uploadURL = computed(() => api_base_url + props.uploadUrl)
+
 
 const handleChange = info => {
   const status = info.file.status;
@@ -29,7 +37,7 @@ function handleDrop(e) {
       v-model:fileList="fileList"
       name="file"
       :multiple="true"
-      action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+      :action="uploadURL"
       @change="handleChange"
       @drop="handleDrop"
     >

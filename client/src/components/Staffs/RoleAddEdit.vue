@@ -1,5 +1,4 @@
 <script setup>
-import {CCol, CRow} from "@coreui/vue";
 import {computed, onMounted, reactive, ref, watch} from "vue";
 import store from "@/store";
 import router from "@/router";

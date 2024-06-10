@@ -96,7 +96,8 @@ defineExpose({
     </div>
     <a-divider class="mt-2 mb-3" style="height: 1px;background-color: #e8e8e8"/>
     <a-row :gutter="[16, 16]">
-      <a-col :xs="{span: 24, order: 2}" :lg="{span: 14, order: 1}">
+      <a-col :xs="{span: 24, order: 2}" :lg="{span: 14, order: 1}" class="custom-scrollbar"
+             :style="{maxHeight: 'calc(100vh - 100px)', overflow: 'hidden',overflowY:'auto'}">
         <a-skeleton :loading="loading" active :paragraph="{ rows: 10 }" :title="false">
           <!--begin::Support Overview Details-->
           <div class="row fs-7 mb-3">
@@ -287,11 +288,11 @@ defineExpose({
           </a-card>
           <!--end::Support Overview Details-->
           <h5>Attachments</h5>
-          <Upload/>
+          <Upload :upload-url="`support/upload/${support.id}`"/>
         </a-skeleton>
       </a-col>
       <a-col :xs="{span: 24, order: 2}" :lg="{span: 10, order: 1}" class="d-flex">
-        <a-divider type="vertical" style="height: 100%; border-color: #ced3cc"/>
+        <a-divider type="vertical" class="ms-0" style="height: 100%; border-color: #ced3cc"/>
 
       </a-col>
     </a-row>
