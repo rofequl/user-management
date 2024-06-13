@@ -2,6 +2,7 @@
 import {ref} from "vue";
 import {api_base_url} from "@/core/config/app";
 import apiService from "@/core/services/api.service";
+import FileDetails from "@/components/Addon/Include/Upload/FileDetails.vue";
 
 //  <--- Variable ---> //
 // Data value declaration::::
@@ -10,9 +11,7 @@ const props = defineProps({
     type: String
   }
 })
-const fileList = ref([
-
-]);
+const fileList = ref([]);
 const uploadURL = ref(api_base_url + props.uploadUrl)
 
 //Handles the custom request for file upload.
@@ -36,8 +35,15 @@ const handleCustomRequest = ({file, onSuccess, onError, onProgress}) => {
 </script>
 <template>
   <div>
-    <a-upload-dragger name="file" :multiple="true" :customRequest="handleCustomRequest">
+    <a-upload-dragger name="file" :multiple="true" :customRequest="handleCustomRequest" :showUploadList="false">
       <p class="ant-upload-text">Click or drag file to this area to upload</p>
     </a-upload-dragger>
+    <a-list :grid="{ gutter: 0, column: 4 }" :data-source="fileList" class="my-3">
+      <template #renderItem="{ item }">
+        <a-list-item class="ps-0">
+          <FileDetails :file="item"/>
+        </a-list-item>
+      </template>
+    </a-list>
   </div>
 </template>
