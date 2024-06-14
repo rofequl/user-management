@@ -57,5 +57,20 @@ module.exports = (sequelize) => {
 
     }, {
         sequelize, tableName: 'support', paranoid: true, timestamps: true,
+        hooks: {
+            afterFind: (results) => {
+                if (!results) return;
+                const attachments = Array.isArray(results) ? results : [results];
+                attachments.forEach(attachment => {
+                    if (attachment && attachment.AttachmentUploads) {
+                        attachment.AttachmentUploads.forEach(upload => {
+                            if (upload.path) {
+                                upload.path = `${process.env.APP_URL}:${process.env.APP_PORT}/${upload.path}`;
+                            }
+                        });
+                    }
+                });
+            }
+        }
     })
 }

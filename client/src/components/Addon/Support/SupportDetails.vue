@@ -288,12 +288,11 @@ defineExpose({
           </a-card>
           <!--end::Support Overview Details-->
           <h5>Attachments</h5>
-          <Upload :upload-url="`support/upload/${support.id}`"/>
+          <Upload :upload-url="`support/upload/${support.id}`" :attachment-list="support.AttachmentUploads"/>
         </a-skeleton>
       </a-col>
       <a-col :xs="{span: 24, order: 2}" :lg="{span: 10, order: 1}" class="d-flex">
         <a-divider type="vertical" class="ms-0" style="height: 100%; border-color: #ced3cc"/>
-
       </a-col>
     </a-row>
   </a-modal>

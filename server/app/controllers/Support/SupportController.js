@@ -55,6 +55,9 @@ exports.getSupportDetails = async (req, res) => {
                 {
                     model: models.User,
                     attributes: ['id', 'name']
+                },
+                {
+                    model: models.AttachmentUpload,
                 }]
         });
         if (support) {

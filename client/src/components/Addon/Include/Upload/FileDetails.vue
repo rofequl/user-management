@@ -1,5 +1,19 @@
 <script setup>
 import {CloudDownloadOutlined, DeleteFilled, FileImageTwoTone} from "@ant-design/icons-vue";
+import {format} from "date-fns";
+
+//  <--- Variable ---> //
+// Data value declaration::::
+const props = defineProps({
+  file: {
+    type: Object
+  }
+})
+
+const formattedString = (e) => {
+  if (e.length <= 19) return e;
+  return e.slice(0, 12) + "...." + e.slice(-7);
+}
 </script>
 <template>
   <a-badge-ribbon text="PDF">
@@ -10,16 +24,20 @@ import {CloudDownloadOutlined, DeleteFilled, FileImageTwoTone} from "@ant-design
         </div>
       </template>
       <template #actions>
-        <cloud-download-outlined class="fs-6" key="setting"/>
+        <a :href="file.path" target="_blank">
+          <cloud-download-outlined class="fs-6" key="setting"/>
+        </a>
         <delete-filled class="fs-6" key="edit"/>
       </template>
       <a-card-meta>
         <template #title>
-          <p class="fw-normal mb-0" style="font-size: 14px">MyGov Stage QR Application Issue List.pdf</p>
+          <p class="fw-normal mb-0" style="font-size: 14px">
+            <a-tooltip :title="file.FileName">{{ formattedString(file.FileName) }}</a-tooltip>
+          </p>
         </template>
         <template #description class="fs-6">
           <div class="d-flex justify-content-between align-items-center">
-            <span>Jun 6 at 10:58 am</span>
+            <span>{{ format(file.createdAt, "MMM dd 'at' h:mm a") }}</span>
             <a-avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel&key=3" :size="18"/>
           </div>
         </template>
