@@ -1,6 +1,15 @@
 <script setup>
-import {CloudDownloadOutlined, DeleteFilled, FileImageTwoTone} from "@ant-design/icons-vue";
+import {
+  CloudDownloadOutlined,
+  DeleteFilled,
+  FileImageTwoTone,
+  FilePdfTwoTone,
+  FileExcelTwoTone,
+  FileTextTwoTone,
+  FileZipTwoTone
+} from "@ant-design/icons-vue";
 import {format} from "date-fns";
+import { message } from 'ant-design-vue';
 
 //  <--- Variable ---> //
 // Data value declaration::::
@@ -10,24 +19,47 @@ const props = defineProps({
   }
 })
 
+const fileType = props.file.FileType;
+
+const badgeColor = (e) => {
+  if (e === 'JPG' || fileType === 'MP4') return 'pink';
+  if (e === 'PDF') return 'orange';
+  if (e === 'XLSX') return 'green';
+  if (e === 'TXT') return 'Red';
+  if (e === 'ZIP') return 'volcano';
+}
+
 const formattedString = (e) => {
   if (e.length <= 19) return e;
-  return e.slice(0, 12) + "...." + e.slice(-7);
+  return e.slice(0, 11) + "...." + e.slice(-7);
 }
+
+const confirm = e => {
+  console.log(e);
+  message.success('Click on Yes');
+};
 </script>
 <template>
-  <a-badge-ribbon text="PDF">
-    <a-card hoverable style="width: 100%" :body-style="{padding: '3px 6px 8px', fontSize: '12px'}">
+  <a-badge-ribbon :text="fileType" :color="badgeColor(fileType)">
+    <a-card hoverable style="width: 100%" :body-style="{padding: '3px 6px 8px', fontSize: '12px'}" class="custom-card">
       <template #cover>
         <div class="d-flex justify-content-center p-3">
-          <FileImageTwoTone style="font-size: 40px;" two-tone-color="#61a070e0"/>
+          <FileImageTwoTone style="font-size: 30px;" two-tone-color="#FD5CA8"
+                            v-if="fileType === 'JPG' || fileType === 'MP4'"/>
+          <FilePdfTwoTone style="font-size: 30px;" two-tone-color="#FD5CA8" v-if="fileType === 'PDF'"/>
+          <FileExcelTwoTone style="font-size: 30px;" two-tone-color="#FD5CA8" v-if="fileType === 'XLSX'"/>
+          <FileTextTwoTone style="font-size: 30px;" two-tone-color="#FD5CA8" v-if="fileType === 'TXT'"/>
+          <FileZipTwoTone style="font-size: 30px;" two-tone-color="#FD5CA8" v-if="fileType === 'ZIP'"/>
         </div>
       </template>
-      <template #actions>
+      <template #actions style="margin: 0;">
         <a :href="file.path" target="_blank">
           <cloud-download-outlined class="fs-6" key="setting"/>
         </a>
-        <delete-filled class="fs-6" key="edit"/>
+        <a-popconfirm title="Are you sure delete this file?"
+          ok-text="Yes" cancel-text="No" @confirm="confirm">
+          <delete-filled class="fs-6" key="edit"/>
+        </a-popconfirm>
       </template>
       <a-card-meta>
         <template #title>
@@ -38,7 +70,9 @@ const formattedString = (e) => {
         <template #description class="fs-6">
           <div class="d-flex justify-content-between align-items-center">
             <span>{{ format(file.createdAt, "MMM dd 'at' h:mm a") }}</span>
-            <a-avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel&key=3" :size="18"/>
+            <a-tooltip :title="file.User.name">
+              <a-avatar :src="file.User.profilePicture" :size="18"/>
+            </a-tooltip>
           </div>
         </template>
       </a-card-meta>
@@ -49,6 +83,8 @@ const formattedString = (e) => {
   </a-badge-ribbon>
 </template>
 
-<style scoped>
-
+<style>
+.custom-card .ant-card-actions li {
+  margin: 4px 0;
+}
 </style>

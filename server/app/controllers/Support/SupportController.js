@@ -58,9 +58,25 @@ exports.getSupportDetails = async (req, res) => {
                 },
                 {
                     model: models.AttachmentUpload,
+                    include: [
+                        {
+                            model: models.User,
+                            attributes: ['name', 'profilePicture']
+                        }
+                    ]
                 }]
         });
         if (support) {
+            // Modify the profilePicture value
+            const attachmentUploads = support.AttachmentUploads;
+            if (attachmentUploads && attachmentUploads.length > 0) {
+                attachmentUploads.forEach(attachment => {
+                    if (attachment.User) {
+                        attachment.User.profilePicture = `${process.env.APP_URL + ':' + process.env.APP_PORT}/${attachment.User.profilePicture}`;
+                    }
+                });
+            }
+
             res.status(200).json({
                 success: true,
                 message: 'Support details found',
@@ -229,20 +245,19 @@ exports.addFile = async (req, res) => {
         const {originalname, mimetype, buffer, size} = req.file;
 
         // Validate file type (optional, adjust as needed)
-        const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+        const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'text/plain', 'application/x-zip-compressed', 'video/mp4'];
         if (!allowedTypes.includes(mimetype)) return res.status(400).json({
             success: false,
             message: 'Invalid file type'
         });
 
         const fileUpload = new SaveFile('support', originalname);
-        const fileName = await fileUpload.save(buffer);
-
+        const fileResponse = await fileUpload.save(buffer);
         const attachment = {
-            path: `upload/support/${fileName}`,
-            FileName: fileName,
-            FileType: mimetype,
-            FileSize: size,
+            path: fileResponse.path,
+            FileName: fileResponse.filename,
+            FileType: fileResponse.fileType,
+            FileSize: Math.round(size / 1024),
             modelName: 'Support',
             modelId: id,
             userId: req.user.id

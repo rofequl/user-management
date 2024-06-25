@@ -14,25 +14,9 @@ const props = defineProps({
     type: Object
   }
 })
-const fileList = ref([]);
+
 const uploadURL = ref(api_base_url + props.uploadUrl)
 
-const data = [
-  {
-    title: 'Ant Design Title 1',
-  },
-  {
-    title: 'Ant Design Title 2',
-  },
-  {
-    title: 'Ant Design Title 3',
-  },
-  {
-    title: 'Ant Design Title 4',
-  },
-];
-
-console.log(props.attachmentList);
 
 //Handles the custom request for file upload.
 const handleCustomRequest = ({file, onSuccess, onError, onProgress}) => {
@@ -58,7 +42,7 @@ const handleCustomRequest = ({file, onSuccess, onError, onProgress}) => {
     <a-upload-dragger name="file" :multiple="true" :customRequest="handleCustomRequest" :showUploadList="false">
       <p class="ant-upload-text">Click or drag file to this area to upload</p>
     </a-upload-dragger>
-    <a-list :grid="{ gutter: 0, column: 4 }" :data-source="attachmentList" class="my-3">
+    <a-list :grid="{ gutter: 0, xs: 1, sm: 3, md: 4, lg: 3, xl: 4, xxl: 5 }" :data-source="attachmentList" class="my-3">
       <template #renderItem="{ item }">
         <a-list-item class="ps-0">
           <FileDetails :file="item"/>

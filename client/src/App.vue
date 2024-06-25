@@ -4,6 +4,14 @@
       token: {
         fontFamily: 'Poppins, sans-serif',
       },
+      components: {
+        Popconfirm: {
+          zIndexPopup: '1099!important'
+        },
+        Message: {
+          zIndexPopup: '1099!important'
+        },
+      },
     }"
   >
     <router-view/>

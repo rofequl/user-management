@@ -97,7 +97,7 @@ defineExpose({
     <a-divider class="mt-2 mb-3" style="height: 1px;background-color: #e8e8e8"/>
     <a-row :gutter="[16, 16]">
       <a-col :xs="{span: 24, order: 2}" :lg="{span: 14, order: 1}" class="custom-scrollbar"
-             :style="{maxHeight: 'calc(100vh - 100px)', overflow: 'hidden',overflowY:'auto'}">
+             :style="{maxHeight: 'calc(100vh - 120px)', overflow: 'hidden',overflowY:'auto'}">
         <a-skeleton :loading="loading" active :paragraph="{ rows: 10 }" :title="false">
           <!--begin::Support Overview Details-->
           <div class="row fs-7 mb-3">
