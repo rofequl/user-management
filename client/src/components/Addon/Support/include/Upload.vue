@@ -16,6 +16,7 @@ const props = defineProps({
 })
 
 const uploadURL = ref(api_base_url + props.uploadUrl)
+const emit = defineEmits(['upload']);
 
 
 //Handles the custom request for file upload.
@@ -31,8 +32,10 @@ const handleCustomRequest = ({file, onSuccess, onError, onProgress}) => {
       onProgress({percent: Math.round((event.loaded / event.total) * 100)});
     }
   }).then(response => {
+    emit('upload', response.data)
     onSuccess(response.data);
   }).catch(error => {
+    console.log(error);
     onError(error);
   });
 };

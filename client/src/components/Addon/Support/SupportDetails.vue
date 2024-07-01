@@ -64,6 +64,10 @@ const deleteSupport = () => {
   });
 }
 
+const attachmentUpload = (data) => {
+  store.commit('SUPPORT_ATTACHMENT_ADD', {id: support.value.id, value: data.data})
+}
+
 // Function to handle edit support
 const handleEditSupport = () => {
   emit('edit', support.value)
@@ -288,7 +292,8 @@ defineExpose({
           </a-card>
           <!--end::Support Overview Details-->
           <h5>Attachments</h5>
-          <Upload :upload-url="`support/upload/${support.id}`" :attachment-list="support.AttachmentUploads"/>
+          <Upload :upload-url="`support/upload/${support.id}`" :attachment-list="support.AttachmentUploads"
+                  @upload="attachmentUpload"/>
         </a-skeleton>
       </a-col>
       <a-col :xs="{span: 24, order: 2}" :lg="{span: 10, order: 1}" class="d-flex">

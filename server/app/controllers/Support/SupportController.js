@@ -63,20 +63,17 @@ exports.getSupportDetails = async (req, res) => {
                             model: models.User,
                             attributes: ['name', 'profilePicture']
                         }
-                    ]
+                    ],
+                    order: ['id', 'DESC']
                 }]
         });
         if (support) {
-            // Modify the profilePicture value
             const attachmentUploads = support.AttachmentUploads;
             if (attachmentUploads && attachmentUploads.length > 0) {
                 attachmentUploads.forEach(attachment => {
-                    if (attachment.User) {
-                        attachment.User.profilePicture = `${process.env.APP_URL + ':' + process.env.APP_PORT}/${attachment.User.profilePicture}`;
-                    }
+                    modifyAttachmentPaths(attachment)
                 });
             }
-
             res.status(200).json({
                 success: true,
                 message: 'Support details found',
@@ -263,15 +260,35 @@ exports.addFile = async (req, res) => {
             userId: req.user.id
         };
 
-        await models.AttachmentUpload.create(attachment).then(result => {
-            res.status(200).json({
-                success: true,
-                message: 'File uploaded successfully!',
-            });
-        })
+        const createdAttachment = await models.AttachmentUpload.create(attachment);
+
+        // Fetch the created attachment along with the user information
+        const result = await models.AttachmentUpload.findOne({
+            where: {id: createdAttachment.id},
+            include: [
+                {
+                    model: models.User,
+                    attributes: ['name', 'profilePicture'] // Include the fields you want from the User model
+                }
+            ]
+        });
+        modifyAttachmentPaths(result)
+        res.status(200).json({
+            success: true,
+            message: 'File uploaded successfully!',
+            data: result
+        });
     } catch (err) {
         log.Error(err.message, 'SupportController', 'addFile', err.errors, function () {
             res.status(500).json({success: false, message: "Internal server error", error: err.message});
         });
     }
 }
+
+// Helper function to modify attachment paths and user profile pictures
+const modifyAttachmentPaths = (attachment) => {
+    attachment.path = `${process.env.APP_URL}:${process.env.APP_PORT}/${attachment.path}`;
+    if (attachment.User) {
+        attachment.User.profilePicture = `${process.env.APP_URL}:${process.env.APP_PORT}/${attachment.User.profilePicture}`;
+    }
+};

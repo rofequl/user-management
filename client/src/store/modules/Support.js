@@ -66,8 +66,11 @@ const support = {
     SUPPORT_MODIFY: (state, data) => {
       Object.assign(state.support.find(element => element.id === data.id), data);
     },
+    SUPPORT_ATTACHMENT_ADD: (state, data) => {
+      state.support.find(element => element.id === data.id).AttachmentUploads.push(data.value);
+    },
     SUPPORT_ATTACHMENT_REMOVE: (state, data) => {
-      
+
     },
   }
 }
