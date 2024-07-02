@@ -5,13 +5,15 @@ import router from "@/router";
 const auth = {
   state: {
     user: {},
+    permission: {},
     isAuthenticated: !!JwtService.getToken(),
     isLoad: false
   },
   getters: {
     isAuthenticated: (state) => state.isAuthenticated,
     currentUser: (state) => state.user,
-    isLoadProfile: (state) => state.isLoad
+    isLoadProfile: (state) => state.isLoad,
+    userPermissionCheck: (state) => id => id.some(value => state.permission.includes(value))
   },
   actions: {
     LOGIN({commit}, credentials) {
@@ -68,8 +70,10 @@ const auth = {
       JwtService.saveToken(user.token);
     },
     SET_AUTH_USERS: (state, user) => {
+      state.permission = user.Role.Permissions;
+      delete user.Role.Permissions
       state.user = user;
-    }
+    },
   }
 }
 

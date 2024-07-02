@@ -47,10 +47,24 @@ async function authMiddleware(req, res, next) {
                 } else {
                     const user = await models.User.findOne({
                         where: {id: decoded.sub},
-                        include: models.Role
+                        include: [{
+                            model: models.Role,
+                            attributes: ['name'],
+                            include: [
+                                {
+                                    model: models.Permission,
+                                    attributes: ['id'],
+                                    through: {attributes: []}
+                                }
+                            ]
+                        }]
                     })
                     if (user && user.id) {
-                        req.user = user;
+                        // Extract permission IDs under each role
+                        const userData = user.toJSON();
+                        userData.Role.Permissions = userData.Role.Permissions.map(permission => permission.id);
+
+                        req.user = userData;
                         req.refreshToken = decoded.ref;
                         next();
                     } else return res.status(403).json({
