@@ -48,6 +48,7 @@ router.post("/support", authMiddleware, SupportController.addSupport);
 router.put("/support/:id", authMiddleware, SupportController.updateSupport);
 router.delete("/support/:id", authMiddleware, SupportController.deleteSupport);
 router.post("/support/upload/:id", upload.single('file'), authMiddleware, SupportController.addFile);
+router.delete("/support/upload/:id", authMiddleware, SupportController.deleteFile);
 
 
 module.exports = router;
