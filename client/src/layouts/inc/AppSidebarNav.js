@@ -6,6 +6,7 @@ import nav from '@/layouts/inc/_nav.js'
 
 import simpleBar from 'simplebar-vue'
 import 'simplebar-vue/dist/simplebar.min.css'
+import store from "@/store";
 
 const normalizePath = (path) =>
   decodeURI(path)
@@ -73,7 +74,7 @@ const AppSidebarNav = defineComponent({
               }),
               item.name,
             ],
-            default: () => item.items.map((child) => renderItem(child)),
+            default: () => item.items.map((child) => item.permissionId ? store.getters.userPermissionCheck(child.permissionId) ? renderItem(child) : null : renderItem(child)),
           },
         )
       }
@@ -144,7 +145,7 @@ const AppSidebarNav = defineComponent({
           as: simpleBar,
         },
         {
-          default: () => nav.map((item) => renderItem(item)),
+          default: () => nav.map((item) => item.permissionId ? store.getters.userPermissionCheck(item.permissionId) ? renderItem(item) : null : renderItem(item)),
         },
       )
   },

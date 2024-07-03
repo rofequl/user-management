@@ -94,11 +94,14 @@ const onUpdate = () => {
       });
       router.push({name: 'User Permission'})
     })
-    .catch(err => requestFailed(err))
+    .catch(err => {
+      console.log(err)
+    })
     .finally(() => submitBtn.value = false)
 }
 // Form submit error notify::::
 const requestFailed = (err) => {
+  console.log(err)
   notification.error({
     message: err.message,
     description: ((err.response || {}).data || {}).message || ((err.response || {}).data || {}).errors.name.msg,

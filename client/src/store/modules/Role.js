@@ -53,7 +53,7 @@ const role = {
         ApiService.put("role/" + params.id, params.data)
           .then(({data}) => {
             commit('ROLE_MODIFY', data.data);
-            resolve()
+            resolve(data)
           })
           .catch(error => {
             reject(error)

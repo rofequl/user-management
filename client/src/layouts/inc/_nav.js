@@ -22,16 +22,19 @@ export default [
     name: 'Staffs',
     to: '/staffs',
     icon: 'cil-user',
+    permissionId: [1, 5],
     items: [
       {
         component: 'CNavItem',
         name: 'All Staffs',
-        to: '/staffs/list'
+        to: '/staffs/list',
+        permissionId: [1],
       },
       {
         component: 'CNavItem',
         name: 'Staffs Permissions',
-        to: '/staffs/role'
+        to: '/staffs/role',
+        permissionId: [5]
       }
     ]
   },
