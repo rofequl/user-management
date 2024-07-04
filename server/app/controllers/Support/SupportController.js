@@ -285,6 +285,24 @@ exports.addFile = async (req, res) => {
     }
 }
 
+exports.deleteFile = async (req, res) => {
+    const {id} = req.params;
+    try {
+        // const attachment = await models.AttachmentUpload.destroy({where: {id: id}});
+        // if (attachment) {
+        res.status(200).json({
+            success: true,
+            message: 'Attachment deleted successfully'
+        });
+        // } else return res.status(404).json({success: false, message: 'Attachment not found'});
+    } catch (err) {
+        log.Error(err.message, 'SupportController', 'deleteFile', err.errors, function () {
+            res.status(500).json({success: false, message: "Internal server error", error: err.message});
+        });
+    }
+
+}
+
 // Helper function to modify attachment paths and user profile pictures
 const modifyAttachmentPaths = (attachment) => {
     attachment.path = `${process.env.APP_URL}:${process.env.APP_PORT}/${attachment.path}`;

@@ -70,7 +70,7 @@ const support = {
       state.support.find(element => element.id === data.id).AttachmentUploads.push(data.value);
     },
     SUPPORT_ATTACHMENT_REMOVE: (state, data) => {
-
+      console.log(data);
     },
   }
 }

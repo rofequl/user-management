@@ -9,15 +9,20 @@ import {
   FileZipTwoTone
 } from "@ant-design/icons-vue";
 import {format} from "date-fns";
-import { message } from 'ant-design-vue';
+import {message} from 'ant-design-vue';
+import apiService from "@/core/services/api.service";
 
 //  <--- Variable ---> //
 // Data value declaration::::
 const props = defineProps({
   file: {
     type: Object
+  },
+  deleteUrl: {
+    type: String
   }
 })
+const emit = defineEmits(['remove']);
 
 const fileType = props.file.FileType;
 
@@ -34,9 +39,14 @@ const formattedString = (e) => {
   return e.slice(0, 11) + "...." + e.slice(-7);
 }
 
-const confirm = e => {
-  console.log(e);
-  message.success('Click on Yes');
+const confirm = () => {
+  apiService.delete(props.deleteUrl.replace(/\/\d+$/, `/${props.file.id}`)).then(() => {
+    emit('remove', props.file.id);
+    message.success('Attachment has been deleted successfully!');
+  }).catch(error => {
+    message.error('Something went wrong!');
+    console.log(error)
+  });
 };
 </script>
 <template>
@@ -57,7 +67,7 @@ const confirm = e => {
           <cloud-download-outlined class="fs-6" key="setting"/>
         </a>
         <a-popconfirm title="Are you sure delete this file?"
-          ok-text="Yes" cancel-text="No" @confirm="confirm">
+                      ok-text="Yes" cancel-text="No" @confirm="confirm">
           <delete-filled class="fs-6" key="edit"/>
         </a-popconfirm>
       </template>

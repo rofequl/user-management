@@ -16,7 +16,7 @@ const props = defineProps({
 })
 
 const uploadURL = ref(api_base_url + props.uploadUrl)
-const emit = defineEmits(['upload']);
+const emit = defineEmits(['upload', 'remove']);
 
 
 //Handles the custom request for file upload.
@@ -48,7 +48,7 @@ const handleCustomRequest = ({file, onSuccess, onError, onProgress}) => {
     <a-list :grid="{ gutter: 0, xs: 1, sm: 3, md: 4, lg: 3, xl: 4, xxl: 5 }" :data-source="attachmentList" class="my-3">
       <template #renderItem="{ item }">
         <a-list-item class="ps-0">
-          <FileDetails :file="item"/>
+          <FileDetails :file="item" :delete-url="uploadURL" @remove="(e) => emit('remove', e)"/>
         </a-list-item>
       </template>
     </a-list>
