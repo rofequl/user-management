@@ -74,6 +74,11 @@ const routes = [
         component: () => import('@/views/Directory/SupportCategory/index.vue')
       },
       {
+        path: 'support-report',
+        name: 'Support Report',
+        component: () => import('@/views/Report/SupportReport.vue')
+      },
+      {
         path: "/404",
         name: "NotFound",
         component: () => import("@/views/error/Error-404"),

@@ -19,11 +19,11 @@ const columns = [
     dataIndex: 'name',
     key: 'name',
   },
-  {
+  ...(store.getters.userPermissionCheck([7, 8]) ? [{
     title: 'Action',
     dataIndex: 'action',
     width: '10%',
-  },
+  }] : [])
 ]
 
 const onDelete = key => {
@@ -51,7 +51,7 @@ const onEdit = id => {
     <!-- Start Page Header -->
     <a-page-header title="All Role List" class="p-0 mb-2">
       <template #extra>
-        <router-link :to="{name: 'New Role'}">
+        <router-link :to="{name: 'New Role'}" v-if="store.getters.userPermissionCheck([6])">
           <a-button type="primary">Add New Role</a-button>
         </router-link>
       </template>
@@ -71,7 +71,7 @@ const onEdit = id => {
         <template #bodyCell="{ column, record }">
           <template v-if="column.dataIndex === 'action'">
             <a-button-group>
-              <a-tooltip placement="topLeft" title="Edit Role">
+              <a-tooltip placement="topLeft" title="Edit Role" v-if="store.getters.userPermissionCheck([7])">
                 <a-button :icon="h(EditOutlined)" @click="onEdit(record.id)"/>
               </a-tooltip>
               <a-popconfirm placement="topRight"
@@ -79,7 +79,7 @@ const onEdit = id => {
                             ok-text="Yes"
                             cancel-text="No"
                             @confirm="onDelete(record.id)">
-                <a-tooltip placement="bottomLeft" title="Delete Role">
+                <a-tooltip placement="bottomLeft" title="Delete Role" v-if="store.getters.userPermissionCheck([8])">
                   <a-button :icon="h(DeleteOutlined)"/>
                 </a-tooltip>
               </a-popconfirm>

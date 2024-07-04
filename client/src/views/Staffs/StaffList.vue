@@ -6,6 +6,7 @@ import {computed, h} from "vue";
 import StaffAddEdit from "@/components/Staffs/StaffAddEdit.vue";
 import {format} from 'date-fns';
 import {EditOutlined, EyeOutlined} from "@ant-design/icons-vue";
+import store from "@/store";
 
 const getUserList = params => apiService.get('user', {params})
 const {data, run, current, total, loading, pageSize} = usePagination(getUserList, {
@@ -63,11 +64,11 @@ const columns = [
     key: 'createdAt',
     align: 'center',
   },
-  {
+  ...(store.getters.userPermissionCheck([3, 4]) ? [{
     title: 'Action',
     dataIndex: 'action',
     align: 'center',
-  }
+  }] : [])
 ]
 
 const handleTableChange = (pag) => {
@@ -86,7 +87,9 @@ const updateTable = () => {
     <!-- Start Page Header -->
     <a-page-header title="All Staffs" class="p-0 mb-2">
       <template #extra>
-        <a-button type="primary" @click="$refs.childRef.modal()">New Staff Add</a-button>
+        <a-button type="primary" @click="$refs.childRef.modal()" v-if="store.getters.userPermissionCheck([2])">New Staff
+          Add
+        </a-button>
       </template>
       <template #breadcrumb>
         <a-breadcrumb class="fs-7">
@@ -122,10 +125,10 @@ const updateTable = () => {
             </template>
             <template v-if="column.dataIndex === 'action'">
               <a-button-group>
-                <a-tooltip placement="topLeft" title="Edit User" @click="$refs.childRef.modal(record)">
+                <a-tooltip placement="topLeft" title="Edit User" @click="$refs.childRef.modal(record)" v-if="store.getters.userPermissionCheck([3])">
                   <a-button :icon="h(EditOutlined)"/>
                 </a-tooltip>
-                <a-tooltip placement="bottomLeft" title="User Details">
+                <a-tooltip placement="bottomLeft" title="User Details" v-if="store.getters.userPermissionCheck([4])">
                   <a-button :icon="h(EyeOutlined)"/>
                 </a-tooltip>
               </a-button-group>

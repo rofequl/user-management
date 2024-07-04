@@ -2,11 +2,12 @@
 import SupportAddEdit from "@/components/Addon/Support/SupportAddEdit.vue";
 import apiService from "@/core/services/api.service";
 import {usePagination} from "vue-request";
-import {computed, onMounted, ref, watch} from "vue";
+import {computed, h, onMounted, ref, watch} from "vue";
 import {format} from "date-fns";
 import SupportDetails from "@/components/Addon/Support/SupportDetails.vue";
 import router from "@/router";
 import {useRoute} from "vue-router";
+import {FilterOutlined, AreaChartOutlined} from "@ant-design/icons-vue";
 
 const getSupportList = params => apiService.get('support', {params})
 const {data, run, current, total, loading, pageSize} = usePagination(getSupportList, {
@@ -16,6 +17,7 @@ const {data, run, current, total, loading, pageSize} = usePagination(getSupportL
     totalKey: 'data.total',
   },
 });
+const showFilterButton = ref(false)
 
 const dataSource = computed(() => data.value?.data.data || []);
 const pagination = computed(() => ({
@@ -117,6 +119,10 @@ const updateTable = () => {
     <a-page-header title="Support Manager" class="p-0 mb-2">
       <template #extra>
         <a-button type="primary" @click="$refs.childRef.modal()">New Support</a-button>
+        <router-link :to="{name: 'Support Report'}">
+          <a-button :icon="h(AreaChartOutlined)"/>
+        </router-link>
+        <a-button :icon="h(FilterOutlined)" @click="showFilterButton = !showFilterButton"/>
       </template>
       <template #breadcrumb>
         <a-breadcrumb class="fs-7">
@@ -128,7 +134,45 @@ const updateTable = () => {
       </template>
     </a-page-header>
     <!-- End Page Header -->
-
+    <transition>
+      <a-card :bodyStyle="{padding: '12px'}" class="mb-4" v-if="showFilterButton">
+        <a-row :gutter="{ xs: 8, sm: 16, md: 24, lg: 32 }">
+          <a-col class="gutter-row" :xs="24" :md="6">
+            <a-form-item name="type" class="mb-0">
+              <a-select ref="select" class="w-100" placeholder="Select Support Type">
+                <a-select-option value="Support">Support</a-select-option>
+                <a-select-option value="Training">Training</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <a-col class="gutter-row" :xs="24" :md="6">
+            <a-form-item name="type" class="mb-0">
+              <a-select ref="select" class="w-100" placeholder="Select Support Type">
+                <a-select-option value="Support">Support</a-select-option>
+                <a-select-option value="Training">Training</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <a-col class="gutter-row" :xs="24" :md="6">
+            <a-form-item name="status" class="mb-0">
+              <a-select ref="select" class="w-100" placeholder="Select Support Status">
+                <a-select-option value="Resolved">Resolved</a-select-option>
+                <a-select-option value="Pending">Pending</a-select-option>
+                <a-select-option value="Forward to dev">Forward to dev</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <a-col class="gutter-row" :xs="24" :md="6">
+            <a-form-item name="medium" class="mb-0">
+              <a-select ref="select" class="w-100" placeholder="Select Support Medium">
+                <a-select-option value="Physical">Physical</a-select-option>
+                <a-select-option value="Virtual">Virtual</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+        </a-row>
+      </a-card>
+    </transition>
     <!-- Datatable -->
     <a-card :bordered="false" :bodyStyle="{padding: 0}">
       <div class="table-responsive">
