@@ -70,6 +70,7 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING
         },
     }, {
+        tableName: 'user',
         sequelize,
         defaultScope: {
             attributes: {

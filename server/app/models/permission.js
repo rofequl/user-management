@@ -12,5 +12,5 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING,
             allowNull: false
         }
-    }, {sequelize, timestamps: false})
+    }, {tableName: 'permission', sequelize, timestamps: false})
 }

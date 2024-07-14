@@ -4,6 +4,8 @@ const dbConfig = require('../../config/database')
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
     dialect: dbConfig.dialect,
     host: dbConfig.HOST,
+    charset: 'latin1',
+    collate: 'latin1_swedish_ci',
     pool: {
         max: dbConfig.pool.max,
         min: dbConfig.pool.min,

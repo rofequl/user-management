@@ -1,5 +1,6 @@
 const express = require('express')
 const cors = require("cors");
+const path = require('path')
 
 // Import API routes
 const router = require('../routes/api.js')
