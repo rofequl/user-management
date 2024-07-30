@@ -6,6 +6,24 @@ export default [
     icon: 'cil-speedometer',
   },
   {
+    component: 'CNavGroup',
+    name: 'HRM',
+    to: '/hrm',
+    icon: 'cil-user',
+    items: [
+      {
+        component: 'CNavItem',
+        name: 'My Details',
+        to: '/hrm/details',
+      },
+      {
+        component: 'CNavItem',
+        name: 'HRM Configuration',
+        to: '/hrm/configure',
+      },
+    ]
+  },
+  {
     component: 'CNavItem',
     name: 'Support & Training',
     to: '/support-manager',

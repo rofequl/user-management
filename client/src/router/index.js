@@ -39,6 +39,11 @@ const routes = [
         ]
       },
       {
+        path: 'hrm/configure',
+        name: 'hrm configuration',
+        component: () => import('@/views/Addon/HRM/Configure/index.vue')
+      },
+      {
         path: 'support-manager/:slug?',
         name: 'Support Manager',
         component: () => import('@/views/Addon/Support/index.vue')
